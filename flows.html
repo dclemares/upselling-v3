@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">
+<title>Upselling v3</title>
+<!-- Upselling v3: los casos de uso del flujo de upselling de Vlad, en nuestra guestapp rediseñada.
+     «Deal settings» tiene los mismos campos que el dashboard de Chekin (Title, Highlight, Description, Confirmation type, Price + Unit o franjas
+     para Early check-in / Late check-out, Delivery date) y la guestapp se pinta con ellos. -->
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#161643;--sub:#5a6695;--mute:#8a8ca6;--blue:#385bf8;--soft:#f1f3fb;--soft2:#e9edff;--red:#e5484d}
+*{box-sizing:border-box}html,body{margin:0;height:100%}
+body{display:grid;grid-template-columns:270px minmax(0,1fr) var(--sw,330px);grid-template-rows:auto minmax(0,1fr);background:linear-gradient(180deg,#e9ecf9,#dde1f3);color:var(--ink);font:400 14px/1.45 Poppins,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+body.noset{--sw:0px}body.noset #set{display:none}
+header{grid-column:1/-1;display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;padding:10px 14px;background:#fff;box-shadow:0 4px 14px rgba(22,22,67,.06);z-index:2}
+h1{margin:0;font-size:16px;font-weight:700;white-space:nowrap}h1 span{color:var(--blue)}h1 small{font-size:12px;font-weight:600;color:var(--sub);margin-left:4px}
+.cur{flex:1;min-width:120px;font-size:12.5px;color:var(--sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.cur b{color:var(--ink)}
+.seg{display:flex;flex-wrap:wrap;gap:2px;padding:3px;border-radius:12px;background:var(--soft)}
+.seg button{height:30px;padding:0 10px;border:0;border-radius:9px;background:none;color:var(--sub);font:600 12px Poppins,system-ui,sans-serif;cursor:pointer;white-space:nowrap}
+.seg button.on{background:var(--ink);color:#fff}
+.nav{display:flex;gap:6px}.nav button,.nav a{height:32px;padding:0 12px;border:0;border-radius:10px;background:var(--soft);color:var(--ink);font:600 13px Poppins,system-ui,sans-serif;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;white-space:nowrap}
+.nav button:hover,.nav a:hover{background:var(--soft2)}.nav .on{background:var(--ink);color:#fff}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+aside{margin:12px 0 12px 12px;padding:8px 8px 20px;border-radius:16px;background:rgba(255,255,255,.97);box-shadow:0 8px 24px rgba(22,22,67,.14);overflow:auto}
+aside h2{margin:16px 8px 4px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}aside h2:first-child{margin-top:6px}
+aside p{margin:0 8px 6px;font-size:11.5px;color:var(--sub)}
+.it{display:flex;align-items:center;gap:8px;width:100%;padding:6px 8px;border:0;border-radius:10px;background:none;color:var(--ink);font:500 12.5px/1.3 Poppins,system-ui,sans-serif;text-align:left;cursor:pointer}
+.it:hover{background:var(--soft)}.it i{flex:none;display:grid;place-items:center;width:20px;height:20px;border-radius:99px;background:var(--soft2);color:var(--blue);font-style:normal;font-size:11px;font-weight:700}
+.it.on{background:var(--ink);color:#fff}.it.on i{background:var(--blue);color:#fff}.it.x i{background:#f1f2f6;color:var(--mute)}
+main{position:relative;min-width:0}main iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+/* Deal settings: los campos del dashboard */
+#set{margin:12px 12px 12px 0;padding:14px 14px 20px;border-radius:16px;background:#fff;box-shadow:0 8px 24px rgba(22,22,67,.14);overflow:auto}
+#set .hd{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px}#set .hd b{font-size:15px}
+#set .hd button{height:28px;padding:0 10px;border:0;border-radius:8px;background:var(--soft);color:var(--sub);font:600 11.5px Poppins,system-ui,sans-serif;cursor:pointer}
+#set .note{margin:0 0 12px;font-size:11.5px;color:var(--sub)}
+#set label{display:block;margin:12px 0 4px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--mute)}
+#set input,#set select,#set textarea{width:100%;padding:9px 11px;border:0;border-radius:10px;background:var(--soft);color:var(--ink);font:500 13px Poppins,system-ui,sans-serif}
+#set textarea{min-height:76px;resize:vertical}
+#set .two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+#set .tog.prev{background:#fff6dc}
+#set .tog.prev.cart{background:#eef1ff}
+#set .tog{display:flex;align-items:flex-start;gap:10px;margin-top:14px;padding:10px 12px;border-radius:12px;background:var(--soft)}
+#set .tog span{flex:1}#set .tog b{display:block;font-size:13px}#set .tog small{display:block;font-size:11.5px;color:var(--sub)}
+#set .sw{flex:none;position:relative;width:42px;height:24px;border:0;border-radius:99px;background:#c9cee4;cursor:pointer}
+#set .sw i{position:absolute;left:3px;top:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:transform .2s}
+#set .sw[aria-checked="true"]{background:var(--blue)}#set .sw[aria-checked="true"] i{transform:translateX(18px)}
+#set .tip{margin:8px 0 0;padding:8px 10px;border-radius:10px;background:#eef4ff;font-size:11.5px;color:#26306e}
+#set .sl{display:grid;grid-template-columns:22px 1fr 1fr 28px;gap:6px;align-items:center;margin-top:6px}
+#set .sl em{font-style:normal;font-size:11px;color:var(--mute);text-align:center}
+#set .sl .del{width:28px;height:28px;border:0;border-radius:8px;background:#fff0f0;color:var(--red);font-size:15px;cursor:pointer}
+#set .add{margin-top:8px;height:32px;padding:0 12px;border:0;border-radius:10px;background:var(--soft2);color:var(--blue);font:600 12.5px Poppins,system-ui,sans-serif;cursor:pointer}
+@media (max-width:1100px){body{grid-template-columns:240px minmax(0,1fr)}#set{position:fixed;right:12px;top:64px;bottom:12px;width:320px;z-index:5}body.noset #set{display:none}}
+@media (max-width:820px){body{grid-template-columns:1fr;grid-template-rows:auto auto minmax(0,1fr)}aside{max-height:30vh;margin:8px}main{min-height:65vh}}
+/* la lista de pantallas vive ahora en Deal settings (selector «Screen»): sin columna izquierda, el mockup gana ancho */
+aside#list{display:none}
+body{grid-template-columns:minmax(0,1fr) var(--sw,330px)}
+@media (max-width:1100px){body{grid-template-columns:minmax(0,1fr)}}
+#set .scr{margin:0 0 14px;padding:10px 12px 12px;border-radius:12px;background:var(--soft2)}
+#set .scr label{margin-top:0}
+#set .scr select{background:#fff;font-weight:600}
+#set .scr p{margin:6px 2px 0;font-size:11.5px;color:var(--sub)}
+</style></head><body>
+<header><h1>Upselling <span>v3</span> <small>Vlad’s use cases · our guestapp</small></h1><span class="cur" id="cur" aria-live="polite"></span>
+<div class="seg" id="design" role="group" aria-label="Design"></div>
+<div class="seg" id="view" role="group" aria-label="View"></div>
+<div class="nav"><button type="button" id="prev">← Prev</button><button type="button" id="next">Next →</button><a id="open" href="#" target="_blank" rel="noopener">Open alone ↗</a><button type="button" id="setb" class="on" aria-pressed="true" aria-controls="set">Deal settings</button></div></header>
+<aside id="list" aria-label="Flows"></aside>
+<main><iframe id="fr" title="Screen preview"></iframe></main>
+<section id="set" aria-label="Deal settings"></section>
+<script>
+(function(){
+'use strict';
+try { localStorage.setItem('replica-flows-panel', '0'); } catch (e) {}   /* sin el cuadro de controles de la réplica */
+/* los deals de partida (los mismos que ux.js); lo que se cambia aquí se guarda en sessionStorage «ux-cfg» y lo leen las pantallas */
+var DEF = {
+  early: { type: 'early', t: 'Early check-in', hl: 'Get into the house before 15:00', ds: 'Drop your bags and settle in before the standard check-in time. We check the cleaning schedule and confirm it for you.', cf: 'manual', slots: [['14:00', 10], ['12:00', 20], ['10:00', 35]] },
+  basket: { t: 'Welcome groceries', hl: 'Breakfast waiting when you walk in', ds: 'Bread, cheese, fruit, coffee, milk, orange juice and a bottle of local wine, waiting in the kitchen when you arrive.', p: 18, u: 'unit', cf: 'auto', dd: false },
+  transfer: { t: 'Airport transfer', hl: 'A driver waits for you at arrivals', ds: 'Fixed price for up to 4 passengers with luggage, straight to the door of Villa Calipso. Tell us when you land and the driver will be there.', p: 45, u: 'group', cf: 'auto', dd: true },
+  late: { type: 'late', t: 'Late check-out', hl: 'Keep the house longer on your last day', ds: 'Enjoy a slow last morning: pack, have lunch and leave the keys as usual when you go.', cf: 'auto', slots: [['12:00', 15], ['14:00', 25], ['16:00', 35]] },
+  parking: { t: 'Private parking', hl: 'A covered spot next to the house', ds: 'Park in the private garage next to the house. The remote is handed over with your keys.', p: 15, u: 'day', cf: 'auto', dd: false },
+  wine: { t: 'Wine tasting at sunset', hl: 'Five local wines at a family winery', ds: 'A small-group tasting with local cheese, 10 minutes from the house. Pick-up and drop-off included.', p: 30, u: 'person', cf: 'manual', dd: true },
+  pet: { t: 'Bring your pet', hl: 'Bed, bowls, treats and clean-up', ds: 'Your dog is welcome. We leave a bed, bowls and a few treats, and clean up after your stay.', p: 10, u: 'pet', cf: 'auto', dd: false }
+};
+var GAL0 = { early: [1, 1, 1], basket: [1, 1], transfer: [1, 1], late: [1, 1, 1], parking: [1], wine: [1, 1], pet: [1, 1] };   /* fotos extra de cada deal (las mismas que ux.js) */
+var UNITS = [['unit', 'Per unit'], ['person', 'Per person'], ['group', 'Per group'], ['day', 'Per day'], ['pet', 'Per pet']];
+var HOURS = []; for (var hh = 6; hh <= 22; hh++) ['00', '15', '30', '45'].forEach(function(mm){ if (hh < 22 || mm === '00') HOURS.push((hh < 10 ? '0' : '') + hh + ':' + mm); });   /* en cuartos de hora */
+var G = [
+  ['Browse extras', 'Featured first (the host’s first deal, with its Highlight). Instant deals with nothing to choose add in one tap.', [['ux-list', 'f=full', 'Extras for your stay'], ['ux-mine', 'f=full', 'My extras · nothing yet']]],
+  ['Time slots · Early / Late', 'Pricing by check-in or check-out time. The gain is drawn from the booking’s standard times.', [['ux-instant', 'f=full&o=early', 'Early check-in · Manual'], ['ux-instant', 'f=full&o=late', 'Late check-out · Auto']]],
+  ['Price + unit · Auto', 'Per unit, per day, per pet, per group (with Delivery date).', [['ux-instant', 'f=full&o=basket', 'Welcome groceries · per unit'], ['ux-instant', 'f=full&o=parking', 'Private parking · per day'], ['ux-instant', 'f=full&o=pet', 'Bring your pet · per pet'], ['ux-instant', 'f=full&o=transfer', 'Airport transfer · per group + date']]],
+  ['Price + unit · Manual', 'Held, charged only if the host says yes.', [['ux-instant', 'f=full&o=wine', 'Wine tasting · per person + date']]],
+  ['My requests', 'Each request with its next step; what you pay and what is only held, apart.', [['ux-mine', 'f=mine', 'Request waiting · extras to pay'], ['ux-mine', 'f=declined', 'Not confirmed · plan B']]],
+  ['No extras', 'The host hasn’t published anything for these dates.', [['ux-empty', 'f=full', 'No extras yet']]]
+];
+var LINK = [['home', '', 'Home · Offers for your stay'], ['cart', '', 'Payments · Review & pay']];
+var VIEWS = [['split', 'Mobile + desktop'], ['m', 'Mobile'], ['d', 'Desktop']];
+var DSN = [['v644', 'V6.4.4'], ['v644.v2.hc32k2.p3.t2.b3b.w3', 'Final · mobile + desktop']];
+var flat = []; G.forEach(function(g){ g[2].forEach(function(s){ flat.push(s); }); });
+var h = new URLSearchParams(location.hash.slice(1)), i = Math.max(0, Math.min(flat.length - 1, +(h.get('i') || 0))), view = ['split', 'm', 'd'].indexOf(h.get('v')) > -1 ? h.get('v') : 'split', link = null, design = /^v644(\.v2(\.h([123]|c32k[123]|c32a[123]|c32[abc]|c3[123]|[bc][123]))?(\.p[123])?(\.t(2[a-f]|[123]))?(\.i[123])?(\.b(3[abc]|[123]))?(\.w[123])?(\.x[1-8])?(\.g[123])?(\.s[1-7])?(\.r[123])?)?$/.test(h.get('d') || '') ? h.get('d') : 'v644';
+var fr = document.getElementById('fr'), list = document.getElementById('list'), set = document.getElementById('set');
+function cur(){ return link || flat[i]; }
+function url(s){ var q = '&q=' + encodeURIComponent((s[1] ? s[1] + '&' : '') + 'd=' + design); return view === 'split' ? 'split.html?s=' + s[0] + q + '&fx=1' : 'phone.html?s=' + s[0] + q + '&dev=' + (view === 'm' ? 'i15' : 'mbp14'); }
+function seg(id, items, on, cb){ var el = document.getElementById(id); el.innerHTML = items.map(function(v){ return '<button type="button" data-k="' + v[0] + '" class="' + (v[0] === on ? 'on' : '') + '" aria-pressed="' + (v[0] === on) + '">' + v[1] + '</button>'; }).join(''); el.onclick = function(e){ var b = e.target.closest('button'); if (b) cb(b.getAttribute('data-k')); }; }
+function paint(){
+  var n = 0;
+  list.innerHTML = G.map(function(g){ return '<h2>' + g[0] + '</h2><p>' + g[1] + '</p>' + g[2].map(function(s){ var k = n++; return '<button type="button" class="it' + (!link && k === i ? ' on' : '') + '" data-i="' + k + '"><i>' + (k + 1) + '</i>' + s[2] + '</button>'; }).join(''); }).join('')
+    + '<h2>Linked screens</h2>' + LINK.map(function(s, k){ return '<button type="button" class="it x' + (link === s ? ' on' : '') + '" data-l="' + k + '"><i>↗</i>' + s[2] + '</button>'; }).join('');
+  seg('design', DSN, design, function(k){ design = k; load(); });
+  seg('view', VIEWS, view, function(k){ view = k; load(); });
+  document.getElementById('cur').innerHTML = link ? link[2] : '<b>' + (i + 1) + '/' + flat.length + '</b> · ' + flat[i][2];
+  document.getElementById('open').href = url(cur());
+}
+function load(){ paint(); fr.src = url(cur()); var ss = set.querySelector('#s-scr'); if (ss) { ss.value = link ? 'l' + LINK.indexOf(link) : 'i' + i; } history.replaceState(null, '', '#i=' + i + '&v=' + view + '&d=' + design);
+  var m = /o=(\w+)/.exec(cur()[1] || ''); if (m && m[1] !== deal) { deal = m[1]; paintSet(); } }
+list.onclick = function(e){ var b = e.target.closest('button'); if (!b) return; if (b.hasAttribute('data-l')) link = LINK[+b.getAttribute('data-l')]; else { link = null; i = +b.getAttribute('data-i'); } load(); };
+document.getElementById('prev').onclick = function(){ link = null; i = (i - 1 + flat.length) % flat.length; load(); };
+document.getElementById('next').onclick = function(){ link = null; i = (i + 1) % flat.length; load(); };
+var sb = document.getElementById('setb');
+sb.onclick = function(){ var on = document.body.classList.toggle('noset'); sb.classList.toggle('on', !on); sb.setAttribute('aria-pressed', String(!on)); };
+
+/* ---------- Deal settings ---------- */
+var deal = 'early';
+function getCfg(){ try { return JSON.parse(sessionStorage.getItem('ux-cfg') || '{}') || {}; } catch (e) { return {}; } }
+function val(k){ var d = JSON.parse(JSON.stringify(DEF[k])), c = getCfg()[k] || {}; Object.keys(c).forEach(function(f){ d[f] = c[f]; }); return d; }
+function put(k, f, v){ var c = getCfg(); c[k] = c[k] || {}; c[k][f] = v; try { sessionStorage.setItem('ux-cfg', JSON.stringify(c)); } catch (e) {} }
+var tm = 0; function apply(){ clearTimeout(tm); tm = setTimeout(function(){ fr.src = url(cur()); }, 350); }
+function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+function paintSet(){ var d = val(deal), sl = d.type === 'early' || d.type === 'late';
+  var n0 = 0, gi = link ? -1 : (function(){ var c = 0, r = 0; G.forEach(function(g, gk){ g[2].forEach(function(){ if (c === i) r = gk; c++; }); }); return r; })();
+  var scr = '<div class="scr"><label for="s-scr">Screen</label><select id="s-scr">' + G.map(function(g){ return '<optgroup label="' + esc(g[0]) + '">' + g[2].map(function(s){ var k = n0++; return '<option value="i' + k + '"' + (!link && k === i ? ' selected' : '') + '>' + (k + 1) + ' · ' + esc(s[2]) + '</option>'; }).join('') + '</optgroup>'; }).join('')
+    + '<optgroup label="Linked screens">' + LINK.map(function(s, k){ return '<option value="l' + k + '"' + (link === s ? ' selected' : '') + '>↗ ' + esc(s[2]) + '</option>'; }).join('') + '</optgroup></select>'
+    + (gi > -1 ? '<p>' + esc(G[gi][1]) + '</p>' : '') + '</div>';
+  var hs = '<div class="hd"><b>Deal settings</b><button type="button" id="rst">Reset all</button></div>' + scr + '<p class="note">The same fields as the Chekin dashboard. Changes show up in the screens straight away.</p>'
+    + '<label for="s-deal">Deal</label><select id="s-deal">' + Object.keys(DEF).map(function(k){ return '<option value="' + k + '"' + (k === deal ? ' selected' : '') + '>' + esc(val(k).t) + '</option>'; }).join('') + '</select>'
+    + '<label for="s-t">Title</label><input id="s-t" data-f="t" value="' + esc(d.t) + '">'
+    + '<label for="s-hl">Highlight</label><input id="s-hl" data-f="hl" value="' + esc(d.hl) + '">'
+    + '<label for="s-ds">Description</label><textarea id="s-ds" data-f="ds">' + esc(d.ds) + '</textarea>'
+    + '<label for="s-np">Photos</label><select id="s-np" data-f="np">' + [1,2,3,4,5,6,7,8].map(function(n){ var cur = d.np ? +d.np : 1 + ((GAL0[deal] || []).length); return '<option value="' + n + '"' + (n === cur ? ' selected' : '') + '>' + n + ' photo' + (n > 1 ? 's' : '') + '</option>'; }).join('') + '</select><p class="tip">How many photos the host uploaded. The deal page adapts its photo mosaic to this number.</p>'
+    + '<label for="s-cf">Confirmation type</label><select id="s-cf" data-f="cf"><option value="auto"' + (d.cf === 'auto' ? ' selected' : '') + '>Auto</option><option value="manual"' + (d.cf === 'manual' ? ' selected' : '') + '>Manual</option></select>';
+  if (sl) hs += '<label>Pricing · ' + (d.type === 'early' ? 'Check-in time' : 'Check-out time') + '</label><p class="tip">Tip: set higher prices for ' + (d.type === 'early' ? 'earlier' : 'later') + ' time slots to maximize revenue.</p>'
+    + d.slots.map(function(s, n){ return '<div class="sl"><em>' + (n + 1) + '</em><select data-slt="' + n + '" aria-label="Time ' + (n + 1) + '">' + HOURS.map(function(x){ return '<option' + (x === s[0] ? ' selected' : '') + '>' + x + '</option>'; }).join('') + '</select><input type="number" min="0" data-slp="' + n + '" value="' + s[1] + '" aria-label="Price ' + (n + 1) + ' in euros"><button type="button" class="del" data-sld="' + n + '" aria-label="Delete time ' + (n + 1) + '">×</button></div>'; }).join('')
+    + '<button type="button" class="add" id="s-add">+ Add Time</button>';
+  else hs += '<div class="two"><div><label for="s-p">Price €</label><input id="s-p" type="number" min="0" step="0.5" data-f="p" value="' + d.p + '"></div><div><label for="s-u">Unit</label><select id="s-u" data-f="u">' + UNITS.map(function(u){ return '<option value="' + u[0] + '"' + (u[0] === d.u ? ' selected' : '') + '>' + u[1] + '</option>'; }).join('') + '</select></div></div>'
+    + '<div class="tog"><span><b>Delivery date</b><small>When enabled, guests pick a delivery date and time when booking this deal.</small></span><button type="button" class="sw" role="switch" aria-checked="' + !!d.dd + '" aria-label="Delivery date" id="s-dd"><i></i></button></div>';
+  if (!sl && d.dd) { var NT = [], nt = d.nt == null || d.nt === '' ? '13' : String(d.nt); for (var q = 1; q <= 13; q++) NT.push([String(q), String(q)]);   /* de 1 en 1, hasta las 13 horas (09:00–21:00) */
+    hs += '<label for="s-nt">Time options</label><select id="s-nt" data-f="nt">' + NT.map(function(x){ return '<option value="' + x[0] + '"' + (x[0] === nt ? ' selected' : '') + '>' + x[1] + (x[0] ? ' time' + (x[0] === '1' ? '' : 's') : '') + '</option>'; }).join('') + '</select><p class="tip">How many delivery times the guest can pick from, around 12:00 (13 = every hour from 09:00 to 21:00).</p>'; }
+  var bOn = !!getCfg()._bought;
+  hs += '<div class="tog prev"><span><b>Already purchased</b><small>Preview only (not a dashboard field): Early check-in, Welcome groceries and Bring your pet show as already bought, and Private parking as waiting for the host’s approval.</small></span><button type="button" class="sw" role="switch" aria-checked="' + bOn + '" aria-label="Already purchased" id="s-bought"><i></i></button></div>';
+  hs += '<div class="tog prev cart"><span><b>In the cart</b><small>Preview only: Early check-in, Welcome groceries and Bring your pet are in the cart, waiting to be paid.</small></span><button type="button" class="sw" role="switch" aria-checked="' + !!getCfg()._cart + '" aria-label="In the cart" id="s-cart"><i></i></button></div>';
+  set.innerHTML = hs;
+  set.querySelector('#s-scr').onchange = function(){ var v = this.value; if (v.charAt(0) === 'l') link = LINK[+v.slice(1)]; else { link = null; i = +v.slice(1); } load(); paintSet(); };
+  set.querySelector('#s-deal').onchange = function(){ deal = this.value; paintSet(); var at = -1; flat.forEach(function(s, n){ if (at < 0 && (s[1] || '').indexOf('o=' + deal) > -1) at = n; }); if (at > -1) { link = null; i = at; load(); } };
+  [].forEach.call(set.querySelectorAll('[data-f]'), function(el){ el.addEventListener(el.tagName === 'SELECT' ? 'change' : 'input', function(){ var f = el.getAttribute('data-f'); put(deal, f, f === 'p' ? +el.value || 0 : el.value); apply(); if (f === 't') set.querySelector('#s-deal').options[set.querySelector('#s-deal').selectedIndex].text = el.value; }); });
+  var cg = set.querySelector('#s-cart'); if (cg) cg.onclick = function(){ var v = cg.getAttribute('aria-checked') !== 'true'; cg.setAttribute('aria-checked', String(v)); var c = getCfg(); c._cart = v; try { sessionStorage.setItem('ux-cfg', JSON.stringify(c)); } catch (e) {} apply(); };
+  var bg = set.querySelector('#s-bought'); if (bg) bg.onclick = function(){ var v = bg.getAttribute('aria-checked') !== 'true'; bg.setAttribute('aria-checked', String(v)); var c = getCfg(); c._bought = v; try { sessionStorage.setItem('ux-cfg', JSON.stringify(c)); } catch (e) {} apply(); };
+  var dd = set.querySelector('#s-dd'); if (dd) dd.onclick = function(){ var v = dd.getAttribute('aria-checked') !== 'true'; dd.setAttribute('aria-checked', String(v)); put(deal, 'dd', v); paintSet(); apply(); };
+  function slots(){ return val(deal).slots; }
+  [].forEach.call(set.querySelectorAll('[data-slt]'), function(el){ el.onchange = function(){ var s = slots(); s[+el.getAttribute('data-slt')][0] = el.value; put(deal, 'slots', s); apply(); }; });
+  [].forEach.call(set.querySelectorAll('[data-slp]'), function(el){ el.oninput = function(){ var s = slots(); s[+el.getAttribute('data-slp')][1] = +el.value || 0; put(deal, 'slots', s); apply(); }; });
+  [].forEach.call(set.querySelectorAll('[data-sld]'), function(el){ el.onclick = function(){ var s = slots(); if (s.length < 2) return; s.splice(+el.getAttribute('data-sld'), 1); put(deal, 'slots', s); paintSet(); apply(); }; });
+  var ad = set.querySelector('#s-add'); if (ad) ad.onclick = function(){ var s = slots(), used = s.map(function(x){ return x[0]; }), free = HOURS.filter(function(x){ return used.indexOf(x) < 0; }); s.push([free[Math.floor(free.length / 2)] || '13:00', 20]); put(deal, 'slots', s); paintSet(); apply(); };
+  set.querySelector('#rst').onclick = function(){ try { sessionStorage.removeItem('ux-cfg'); } catch (e) {} paintSet(); apply(); };
+}
+paintSet();
+load();
+})();
+</script>
+<script src="assets/i18n-en.js?v=1794423715"></script>
+</body></html>
