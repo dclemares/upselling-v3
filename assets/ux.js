@@ -75,8 +75,9 @@ function line(k, s){ var x = O[k]; return { id: k, n: x.t + (x.u === 'unit' && s
 var st;
 try { st = JSON.parse(sessionStorage.getItem('ux-state') || 'null'); } catch (e) {}
 if (Q.get('f') || !st) st = preset(Q.get('f'));
-function save(){ try { sessionStorage.setItem('ux-state', JSON.stringify(st)); } catch (e) {} }
+function save(){ try { sessionStorage.setItem('ux-state', JSON.stringify(st)); localStorage.setItem('ux-state', JSON.stringify(st)); } catch (e) {} }   /* también en localStorage: el carrito (otra pestaña, «Open alone») lee lo mismo */
 save();
+try { var UXCAT = {}; Object.keys(O).forEach(function(k){ UXCAT[k] = { t: O[k].t, img: isrc(O[k].img) }; }); sessionStorage.setItem('ux-deals', JSON.stringify(UXCAT)); localStorage.setItem('ux-deals', JSON.stringify(UXCAT)); } catch (e) {}   /* título y foto de cada deal, para el mensaje de después del pago (ux-after.js) */
 function inCart(k){ return st.cart.filter(function(x){ return x.id === k; })[0]; }
 /* flag «In the cart» de Deal settings: mete Late check-out, Welcome groceries y Bring your pet en el carrito (pendientes de pagar); apagado, se quitan */
 (function syncCart(){ var on = false; try { on = !!(JSON.parse(sessionStorage.getItem('ux-cfg') || '{}') || {})._cart; } catch (e) {}
@@ -108,6 +109,8 @@ var sel = (inCart(K) && inCart(K).sel) || defSel(o);
 var DS = ['v644'], D = 'v644';   /* única versión: V6.4.4 (2026-11-11); el resto de versiones se quitaron y cualquier enlace abre esta */
 /* lista de extras: original (d=v644) o pulida (d=v644.v2); todo lo demás es la V6.4.4 */
 var RAWD = Q.get('d'); if (!RAWD) { try { RAWD = sessionStorage.getItem('ux-d'); } catch (e) {} }
+var FM = ((RAWD || '').match(/\.f([1-6])$/) || [])[1] || '', FV = FM ? '1' : '', EM = FM === '2' || FM === '6', EP = FM === '3', EA = FM === '4', EU = FM === '5', EC = FM === '6'; RAWD = (RAWD || '').replace(/\.f[1-6]$/, '');   /* f6 = como f2 (email en la confirmación), con «Needs approval» y el email en un solo bloque */   /* f5 = como f1, pero «Needs approval» y el email en un solo bloque */   /* f4 = el email se pide después de pagar en el carrito (Review & pay → Order history ?from=pay, ux-after.js) */   /* f3 = página solo para el email, al pulsar Request */   /* f2 = f1 con el email en la hoja de confirmación («Added to your cart») en vez de en las opciones */
+   /* FV: cambios del feedback de Vlad (12-nov): contador de producción, sin sombras en escritorio, pedir el email si falta */
 var RV = ((RAWD || '').match(/\.r([123])$/) || [])[1] || ''; RAWD = (RAWD || '').replace(/\.r[123]$/, '');   /* RV: columna derecha de la lista en escritorio (1 sin columna, 2 resumen de extras, 3 cómo funciona) */
 var SV = ((RAWD || '').match(/\.s([1-7])$/) || [])[1] || ''; RAWD = (RAWD || '').replace(/\.s[1-7]$/, '');   /* SV: B2 con resumen de la selección + CTA combinados */
 var GV = ((RAWD || '').match(/\.g([123])$/) || [])[1] || ''; RAWD = (RAWD || '').replace(/\.g[123]$/, '');   /* GV: galería de fotos en escritorio (1 rejilla 2×2, 2 grande + 2, 3 grande + 4) */
@@ -119,13 +122,14 @@ var TV = ((RAWD || '').match(/\.t(2[a-f]|[123])$/) || [])[1] || ''; RAWD = (RAWD
 var PV = ((RAWD || '').match(/\.p([123])$/) || [])[1] || ''; RAWD = (RAWD || '').replace(/\.p[123]$/, '');   /* PV: versión de «From our partners» */
 var LV = /^v644\.v2(\.h([123]|c32k[123]|c32a[123]|c32[abc]|c3[123]|[bc][123]))?$/.test(RAWD || '') ? 'v2' : '', HV = ((RAWD || '').match(/\.h([123]|c32k[123]|c32a[123]|c32[abc]|c3[123]|[bc][123])$/) || [])[1] || '';   /* HV: destacado early + late (A, B, C) */
 function isV6(){ return /^v6/.test(D); }
-try { sessionStorage.setItem('ux-d', LV ? 'v644.' + LV + (HV ? '.h' + HV : '') + (PV ? '.p' + PV : '') + (TV ? '.t' + TV : '') + (IV ? '.i' + IV : '') + (BV ? '.b' + BV : '') + (WV ? '.w' + WV : '') + (XV ? '.x' + (DV && DV !== '2' ? String(+DV + 5) : XV) : '') + (GV && GV !== '3' ? '.g' + GV : '') + (SV && SV !== '6' ? '.s' + SV : '') + (RV ? '.r' + RV : '') : 'v644'); } catch (e) {}
+try { sessionStorage.setItem('ux-d', LV ? 'v644.' + LV + (HV ? '.h' + HV : '') + (PV ? '.p' + PV : '') + (TV ? '.t' + TV : '') + (IV ? '.i' + IV : '') + (BV ? '.b' + BV : '') + (WV ? '.w' + WV : '') + (XV ? '.x' + (DV && DV !== '2' ? String(+DV + 5) : XV) : '') + (GV && GV !== '3' ? '.g' + GV : '') + (SV && SV !== '6' ? '.s' + SV : '') + (RV ? '.r' + RV : '') + (FM ? '.f' + FM : '') : 'v644'); } catch (e) {}
+document.documentElement.classList.toggle('ux-fv1', FV === '1'); document.documentElement.classList.toggle('ux-fm5', EU || EC); document.documentElement.classList.toggle('ux-fm6', EC);
 if (LV === 'v2' && !XV) { XV = '2'; DV = '2'; } if (XV === '2') { GV = GV || '3'; SV = SV || '6'; RV = RV || '3'; }   /* versión final unificada: móvil V6.4.4 final + escritorio B2 con lista 3 */
 document.documentElement.classList.toggle('ux-lv2', LV === 'v2'); if (BV) { document.documentElement.classList.add('ux-bv' + BV.charAt(0)); if (BV.length > 1) document.documentElement.classList.add('ux-bv' + BV); }   /* la v2 solo cambia estilos de la lista */
 
 
 /* ---------- utilidades ---------- */
-var P = { cart: '<circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h3l2.7 12.4a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.6L21 7H6"/>', plus: '<path d="M12 5v14M5 12h14"/>', minus: '<path d="M5 12h14"/>', check: '<path d="M20 6 9 17l-5-5"/>', x: '<path d="M18 6 6 18M6 6l12 12"/>', clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+var P = { mail: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>', cart: '<circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h3l2.7 12.4a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.6L21 7H6"/>', plus: '<path d="M12 5v14M5 12h14"/>', minus: '<path d="M5 12h14"/>', check: '<path d="M20 6 9 17l-5-5"/>', x: '<path d="M18 6 6 18M6 6l12 12"/>', clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
   bolt: '<path d="M13 2 3 14h9l-1 8 10-12h-9z"/>', user: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>', users: '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6 6 0 0 1 3.5 6"/>',
   lock: '<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>', right: '<path d="m9 18 6-6-6-6"/>', info: '<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>', left: '<path d="M15 6l-6 6 6 6"/>', ext: '<path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>',
   msg: '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>', spark: '<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/>', info: '<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>',
@@ -179,7 +183,9 @@ function row(k, hint){ var x = O[k];
     + '<span class="ux-rwp"><b>' + priceOf(k) + '</b><small>' + unitOf(k) + '</small></span>' + rowBtn(k) + '</div>'; }
 
 /* ---------- Explorar extras ---------- */
-function listHead(){ var d = keys(['declined']).length, w = keys(['waiting']).length, q = keys(['queued']).length, n = st.cart.length, h = '<div class="ux-top"><h2>Make it <em>your stay</em></h2><p>Extras for your stay. Add them in one tap and pay with your booking.</p></div>';
+/* cabecera del destacado Early/Late en la lista (solo Vlad feedback, versión definitiva V1): horas en verde + «Check in earlier and check out later» */
+function lhHead(tot){ return '<div class="ux-hCh ux-lh ux-lh1"><span><b>Make your stay up to <u>' + tot + ' h</u> longer</b><small>Check in earlier and check out later</small></span></div>'; }
+function listHead(){ var d = keys(['declined']).length, w = keys(['waiting']).length, q = keys(['queued']).length, n = st.cart.length, h = FV ? '<div class="ux-top"><h2>Extras for <em>your stay</em></h2><p>Everything we offer to make your stay even better. Add what you like.</p></div>' : '<div class="ux-top"><h2>Make it <em>your stay</em></h2><p>Extras for your stay. Add them in one tap and pay with your booking.</p></div>';   /* Vlad feedback: título que dice qué es la pantalla y subtítulo con ejemplos */
   var pdN = paidList().length;
   if (LV === 'v2') { if (!(d || w || q || n || pdN)) return h; h += '<button type="button" class="ux-mine ux-mine2' + (d ? ' no' : '') + '" data-go="mine"><span class="ux-mi">' + ic(d ? 'msg' : pdN || n || w || q ? 'bag' : 'bag') + '</span><span><b>' + (d ? 'We answered your request' : 'My extras') + '</b><small>' + (d ? (LV === 'v2' ? 'See our answer' : 'See our answer and a plan B') : [pdN ? pdN + ' purchased' : '', n ? n + ' in your cart' : '', w ? w + ' waiting for approval' : '', q ? q + ' ready to send' : ''].filter(Boolean).join(' · ') || 'What you buy shows up here') + '</small></span>' + (pdN ? '<em>' + pdN + '</em>' : '') + ic('right') + '</button>'; return h; }
   if (d || w || q || n) h += '<button type="button" class="ux-mine' + (d ? ' no' : '') + '" data-go="mine"><span class="ux-mi">' + ic(d ? 'msg' : 'clock') + '</span><span><b>' + (d ? 'We answered your request' : 'My extras') + '</b><small>' + (d ? (LV === 'v2' ? 'See our answer' : 'See our answer and a plan B') : [n ? n + ' added' : '', w ? w + ' waiting for approval' : '', q ? q + ' ready to send' : ''].filter(Boolean).join(' · ')) + '</small></span>' + ic('right') + '</button>';
@@ -251,6 +257,7 @@ function elHero(){ var E = hq('early'), L = hq('late'), ef = sortedSlots(E.x)[0]
         return '<span class="ux-b1g' + (nar ? ' out' : '') + '" style="' + st + '">+' + fh(g) + ' h</span>'; })() + '</span><span class="ux-b1j" style="left:' + px(std) + '%"></span><span class="ux-b1y" style="left:' + px(you) + '%"></span>'
         + '<small style="left:' + px(you) + '%">' + you + '</small><small class="sd" style="left:' + px(std) + '%">' + std + '</small></span>'; };
     var head = '<div class="ux-hCh"><span><b>Make your stay longer</b><small>Get up to +' + tot + ' h in the house</small></span><em>+' + tot + ' h</em></div>';
+    if (FV) head = lhHead(tot);   /* Vlad feedback: «Make your stay up to X h longer» */
     if (HV === 'c31') { var q1 = function(q, d, lbl, std, you, g, pr, early){ return '<button type="button" class="ux-hC3r ux-c31" ' + q.dest + '><span class="hd"><b>' + lbl + '</b><small>' + d.join(' ') + '</small><span class="p">' + pr + ic('right') + '</span></span>' + bar(early, std, you, g) + '</button>'; };
       return '<div class="ux-hC ux-hC3">' + head + q1(E, STAY.days[0], 'Early check-in', STAY.checkin, ef, ge, pe, true) + q1(L, STAY.days[2], 'Late check-out', STAY.checkout, lf, gl, pl, false) + '</div>'; }
     if (/^c32/.test(HV)) { var q2 = function(q, d, lbl, std, you, g, pr, early){ if (q.st === 'Purchased' && BV === '2') return '<button type="button" class="ux-c32r bought cmp" ' + q.dest + '><span class="hd"><small>' + d.join(' ') + '</small><b>' + lbl + '</b><span class="p">' + ic('check') + 'Purchased</span></span><span class="ux-c32x">' + (early ? 'You check in from ' : 'You leave at ') + you + ' · +' + fh(g) + ' h more in the house</span></button>';
@@ -325,7 +332,29 @@ function dTimes(){ var n = Math.max(1, Math.min(TIMES.length, +o.nt || TIMES.len
 function timesHTML(){ var L = desk ? TIMES : dTimes(); if (L.indexOf(sel.time) < 0) sel.time = L[0];
   var rows = Math.ceil(L.length / 7), cols = Math.ceil(L.length / rows);
   return '<div class="ux-times' + (!desk && isV6() ? ' ux-tgrid ux-tn' + Math.min(cols, 7) + '" style="grid-template-columns:repeat(' + cols + ',1fr)' : '') + '" role="radiogroup" aria-label="Time">' + L.map(function(t){ return '<button type="button" role="radio" aria-checked="' + (sel.time === t) + '" data-time="' + t + '">' + t + '</button>'; }).join('') + '</div>'; }
-function choice(){ var h = '';
+/* FV: deal manual sin email del huésped → campo de email en la misma hoja / panel de opciones (lo que pedía Vlad) */
+var mailDraft = '', payDone = null, apprH = 0;
+function mailBlk(){ if (EM || EP || EA || !(needMail() && manual(o))) return '';
+  if (EU) return '<div class="ux-blk ux-mailf ux-mailu"><div class="ux-mu-h"><span class="ux-mu-i">' + ic('clock') + '</span><span><b>Needs approval</b><small class="ux-mu-lg">We first check availability, so we can make sure it’s ready for you. To send the request, pay your cart: we hold ' + eur(amount(o, sel)) + ' on your card, only charged if approved. Until you pay, it isn’t sent.</small><small class="ux-mu-sh">We check availability first. Pay your cart to send it: we hold ' + eur(amount(o, sel)) + ', only charged if approved.</small></span></div>'
+    + '<label class="ux-mu-l" for="ux-mail-in">Your email</label><input id="ux-mail-in" class="ux-min" type="email" inputmode="email" autocomplete="email" placeholder="name@email.com" value="' + esc(mailDraft) + '">'
+    + '<p class="ux-merr" hidden>Add your email so we can send you our answer.</p></div>';
+  return '<div class="ux-blk ux-mailf"><p class="ux-k"><label for="ux-mail-in">Your email</label><span>We send our answer here</span></p>'
+    + '<input id="ux-mail-in" class="ux-min" type="email" inputmode="email" autocomplete="email" placeholder="name@email.com" value="' + esc(mailDraft) + '">'
+    + '<p class="ux-merr" hidden>Add your email so we can send you our answer.</p></div>'; }
+function choice(){ return choice0() + mailBlk(); }
+/* f2: el email se pide en la hoja de confirmación, bajo lo añadido; «Go to cart» no sigue sin él */
+function confMail(k){ if (!EM || !needMail() || !st.req[k]) return '';
+  if (EC) { var ha = eur(st.req[k].amt); return '<div class="ux-mailf ux-mailc ux-mailu"><div class="ux-mu-h"><span class="ux-mu-i">' + ic('clock') + '</span><span><b>Needs approval</b><small>We first check availability, so we can make sure it’s ready for you.</small></span></div>'
+    + '<ol class="ux-mu-st"><li><i>1</i><span><b>Pay your cart to send the request.</b> We hold ' + ha + ' on your card, nothing is charged yet. Until you pay, the request isn’t sent.</span></li>'
+    + '<li><i>2</i><span><b>We check availability</b> and email you the answer, usually within a few hours.</span></li>'
+    + '<li><i>3</i><span><b>Only charged if approved.</b> If not, the hold is released.</span></li></ol>'
+    + '<p class="ux-mu-1" hidden>To send the request, pay your cart: we hold ' + ha + ' on your card while we check availability. Until you pay, it isn’t sent. Only charged if approved.</p>'
+    + '<label class="ux-mu-l" for="ux-mail-in">Where should we send our answer?</label><input id="ux-mail-in" class="ux-min" type="email" inputmode="email" autocomplete="email" placeholder="name@email.com" value="' + esc(mailDraft) + '">'
+    + '<p class="ux-merr" hidden>Add your email so we can send you our answer.</p></div>'; }
+  return '<div class="ux-mailf ux-mailc"><p class="ux-k"><label for="ux-mail-in">Where should we send our answer?</label></p>'
+    + '<input id="ux-mail-in" class="ux-min" type="email" inputmode="email" autocomplete="email" placeholder="name@email.com" value="' + esc(mailDraft) + '">'
+    + '<p class="ux-mhint">We need it to send your request. Only used for updates on it.</p><p class="ux-merr" hidden>Add your email so we can send you our answer.</p></div>'; }
+function choice0(){ var h = '';
   if (slotted(o)) { var ss = sortedSlots(o), std = o.type === 'early' ? STAY.checkin : STAY.checkout;
     return '<div class="ux-blk"><p class="ux-k">' + (o.type === 'early' ? 'Check in at' : 'Check out at') + '<span>Standard ' + std + '</span></p><div class="ux-opts">'
       + ss.map(function(x){ var on = x[0] === sel.slot, d = Math.abs(hrs(x[0]) - hrs(std)); return '<button type="button" class="ux-opt" role="radio" aria-checked="' + on + '" data-slot="' + x[0] + '"><b>' + x[0] + '</b><small>+' + fh(d) + ' h</small><em>' + eur(x[1]) + '</em></button>'; }).join('') + '</div></div>'; }
@@ -436,8 +465,8 @@ function opts6HTML(){ var t = amount(o, sel), ready = !(o.u === 'day' && !sel.da
   var verb = manual(o) ? 'Request' : inC ? 'Update' : 'Add to my stay'; if (isV6() && !v68()) verb = eur(t) + ' · ' + (manual(o) ? 'Request' : inC ? 'Update' : 'Add');
   return '<div class="ux-grab6" data-drag aria-hidden="true"><span class="ux-grab"></span></div>' + '<button type="button" class="ux-x ux-shx" data-close aria-label="Close">' + ic('x') + '</button>'
     + '<div class="ux-h6"><h3>' + sheetQ() + '</h3><p>' + sheetSub() + '</p></div>'
-    + (function(){ var ov = optVar(t, ready, inC); if (!ov) return ''; return '<div class="ux-ob ux-ob6 ux-obv">' + ov.ob + '</div><div class="ux-ofm"><p class="ux-as">' + note + '</p>' + ov.bar + '</div>'; })()
-    + (optVar(t, ready, inC) ? '' : '<div class="ux-ob ux-ob6">' + (slotted(o) ? pick67() : choice()) + (v68() && rec68 && rec68.length ? cross2(K, rec68).replace('<p>Recommended for your stay</p>', '<p>Add to your order</p>') : '') + '</div>'
+    + (function(){ var ov = optVar(t, ready, inC); if (!ov) return ''; return '<div class="ux-ob ux-ob6 ux-obv">' + ov.ob + mailBlk() + '</div><div class="ux-ofm"><p class="ux-as">' + note + '</p>' + ov.bar + '</div>'; })()
+    + (optVar(t, ready, inC) ? '' : '<div class="ux-ob ux-ob6">' + (slotted(o) ? pick67() + mailBlk() : choice()) + (v68() && rec68 && rec68.length ? cross2(K, rec68).replace('<p>Recommended for your stay</p>', '<p>Add to your order</p>') : '') + '</div>'
     + '<div class="ux-ofm"><p class="ux-as">' + note + '</p>' + (isV6() && slotted(o) ? capGain(t) : isV6() && !v68() ? capSel(t) : '<div class="ux-b64"><span><small>' + (v68() ? 'Cart total' : 'Total') + '</small><b class="' + (popNow ? 'ux-tot6' : 'ux-tot0') + '">' + eur(v68() ? tot68() : t) + '</b></span>') + (v68() ? '<button type="button" class="ux-cta" data-act="add68"' + (ready ? '' : ' disabled') + '>' + (inC ? 'Update' : 'Add') + ' · go to cart</button>' : '<button type="button" class="ux-cta" data-act="' + (manual(o) ? 'request' : 'add') + '"' + (ready ? '' : ' disabled') + '>' + verb + '</button>') + '</div></div>'); }
 function optsHTML(){ if ((!desk && isV6()) || (desk && LV === 'v2')) return opts6HTML();   /* versión final: escritorio usa la misma hoja que el móvil */ var t = amount(o, sel), ready = !(o.u === 'day' && !sel.days.length);
   return (desk ? '<div class="ux-oh"><img src="' + isrc(o.img) + '" alt=""><span><b>' + esc(o.t) + '</b><small>' + priceOf(K) + ' ' + unitOf(K) + '</small></span><button type="button" class="ux-x" data-close aria-label="Close">' + ic('x') + '</button></div>' : '<span class="ux-grab" aria-hidden="true"></span>' + '<button type="button" class="ux-x ux-shx" data-close aria-label="Close">' + ic('x') + '</button>')   /* móvil: sin cabecera ni pasos de la retención */
@@ -630,6 +659,55 @@ function vMine(){ var h = '', any = false;
   else cta = LV === 'v2' ? '' : '<div class="ux-buy"><button type="button" class="ux-cta full ghost" data-go="list">Browse more extras</button></div>';   /* v2: sin nada que pagar, sin barra abajo */
   return { body: h, bar: cta }; }
 
+
+/* ---------- FV · pedir el email si no lo tenemos (feedback de Vlad, 12-nov) ----------
+   Ajuste «Guest email unknown» en Deal settings (ux-cfg._nomail). Al pulsar Request, el email se pide dentro de la misma hoja
+   (móvil, mismo alto, sin scroll) o del mismo panel (escritorio); nunca un modal encima. Si no hay hoja abierta, sale como hoja propia. */
+function needMail(){ if (FV !== '1' || st.mail) return false; try { return !!(JSON.parse(sessionStorage.getItem('ux-cfg') || '{}') || {})._nomail; } catch (e) { return false; } }
+function mailHTML(){ var t = amount(o, sel);
+  if (EC) { var mpv = '1', h = eur(t);   /* página de aprobación: V1 elegida (las demás se quitaron el 12-nov) */
+    var X = '<button type="button" class="ux-x ux-mpx" data-close aria-label="Close">' + ic('x') + '</button>',
+      one = '<p class="ux-mu-1" hidden>To send the request, pay your cart: we hold ' + h + ' on your card while we check availability. Until you pay, it isn’t sent. Only charged if approved.</p>',
+      inp = '<input id="ux-mail-in" class="ux-min" type="email" inputmode="email" autocomplete="email" placeholder="name@email.com" value="' + esc(mailDraft) + '"><p class="ux-merr" hidden>Check the email, it looks incomplete.</p>',
+      mail = '<div class="ux-mp-mail"><label class="ux-mlab" for="ux-mail-in">Where should we send our answer?</label>' + inp + '</div>',
+      dis = okMail(mailDraft) ? '' : ' disabled', cta = function(lbl, cls){ return '<button type="button" class="ux-cta full ux-mgo' + (cls ? ' ' + cls : '') + '" data-mailgo' + dis + '>' + lbl + '</button>'; },
+      intro = '<p class="ux-mp-in">We first check availability, so we can make sure it’s ready for you.</p>';
+    var steps = [['cart', 'Pay your cart to send the request.', 'We hold ' + h + ' on your card, nothing is charged yet. Until you pay, the request isn’t sent.'],
+      ['clock', 'We check availability', 'and email you the answer, usually within a few hours.'],
+      ['check', 'Only charged if approved.', 'If not, the hold is released.']];
+    var wrap = function(inner){ return '<div class="ux-mail ux-mailp ux-mpv' + mpv + '">' + X + inner + '</div>'; };
+    return wrap('<div class="ux-p4-hero"><span class="ux-p4-ring">' + ic('clock') + '</span><b class="ux-mp-t">This one needs approval</b>' + intro + '</div>'
+      + '<ol class="ux-mu-st">' + steps.map(function(x, n){ return '<li><i>' + (n + 1) + '</i><em>' + ic(x[0]) + '</em><span><b>' + x[1] + '</b> ' + x[2] + '</span></li>'; }).join('') + '</ol>'
+      + one + mail + '<div class="ux-mp-ft">' + cta(h + ' · Add to cart') + '</div>'); }
+  return '<div class="ux-mail"><button type="button" class="ux-mback" data-mailback aria-label="Back to your options">' + ic('left') + 'Back</button>'
+    + '<span class="ux-mic">' + ic('mail') + '</span><h3>Where should we send our answer?</h3>'
+    + '<p>We confirm requests by email, usually within a few hours. We’ll only use it for updates on this request.</p>'
+    + '<label class="ux-mlab" for="ux-mail-in">Your email</label><input id="ux-mail-in" class="ux-min" type="email" inputmode="email" autocomplete="email" placeholder="name@email.com">'
+    + '<p class="ux-merr" hidden>Check the email, it looks incomplete.</p>'
+    + '<button type="button" class="ux-cta full ux-mgo" data-mailgo disabled>' + eur(t) + ' · Request</button></div>'; }
+function askMail(){ var box = document.querySelector('.ux-opsh');
+  if (box) { var old = box.querySelector('.ux-mail'); if (old) old.remove(); box.insertAdjacentHTML('beforeend', mailHTML()); box.classList.add('ux-mailon');
+    var mp = box.querySelector('.ux-mailp'); if (mp) { var over = function(){ return mp.scrollHeight > mp.clientHeight + 1; };   /* sin scroll: NUNCA se cambia ni se quita texto (Dani, 12-nov); solo se compactan espacios y tamaños por pasos */
+      for (var cp = 1; cp <= 4 && over(); cp++) mp.classList.add('ux-mpc' + cp); } }
+  else { openSheet('email', K); }
+  setTimeout(function(){ var i = document.getElementById('ux-mail-in'); if (i) i.focus(); }, 60); }
+function okMail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v); }
+document.addEventListener('input', function(e){ if (e.target && e.target.id === 'ux-mail-in') { mailDraft = e.target.value; var mf = e.target.closest('.ux-mailf'); if (mf) { var e2 = mf.querySelector('.ux-merr'), h2 = mf.querySelector('.ux-mhint'); if (e2) e2.hidden = true; if (h2) h2.hidden = false; } var b = document.querySelector('[data-mailgo]'), er = document.querySelector('.ux-merr'); if (b) b.disabled = !okMail(e.target.value.trim()); if (er) er.hidden = true; } });
+document.addEventListener('keydown', function(e){ if (e.key === 'Enter' && e.target && e.target.id === 'ux-mail-in') { if (e.target.closest('.ux-maila')) { var sb = document.querySelector('[data-mailsave]'); if (sb) sb.click(); return; } if (e.target.closest('.ux-mailc')) { var gcb = document.querySelector('.ux-sbt [data-go="cart"]'); if (gcb) gcb.click(); return; } if (e.target.closest('.ux-mailf')) { var rq = document.querySelector('.ux-opsh [data-act="request"]'); if (rq) rq.click(); return; } var b = document.querySelector('[data-mailgo]'); if (b && !b.disabled) b.click(); } });
+document.addEventListener('click', function(e){
+  var bk = e.target.closest && e.target.closest('[data-mailback]'); if (bk) { var box = bk.closest('.ux-opsh'); if (box) { box.classList.remove('ux-mailon'); bk.closest('.ux-mail').remove(); } else close(); return; }
+  var ms = e.target.closest && e.target.closest('[data-mailsave]');
+  if (ms) { e.stopPropagation(); var ai = document.getElementById('ux-mail-in'), av = ai ? ai.value.trim() : '', ma = document.querySelector('.ux-maila');
+    if (!okMail(av)) { var ae = ma && ma.querySelector('.ux-merr'), ah = ma && ma.querySelector('.ux-mhint'); if (ae) { ae.textContent = av ? 'Check the email, it looks incomplete.' : 'Add your email so we can send you our answer.'; ae.hidden = false; } if (ah) ah.hidden = true; if (ai) ai.focus(); return; }
+    st.mail = av; save(); close(); toast('We’ll email our answer to ' + esc(av)); return; }
+  var gc = e.target.closest && e.target.closest('[data-go="cart"]'), mc = document.querySelector('.ux-mailc');
+  if (gc && mc) { var ci = document.getElementById('ux-mail-in'), cv = ci ? ci.value.trim() : '';
+    if (!okMail(cv)) { e.stopPropagation(); e.preventDefault(); var ce = mc.querySelector('.ux-merr'), ch = mc.querySelector('.ux-mhint'); if (ce) { ce.textContent = cv ? 'Check the email, it looks incomplete.' : 'Add your email so we can send you our answer.'; ce.hidden = false; } if (ch) ch.hidden = true; if (ci) ci.focus(); return; }
+    st.mail = cv; save(); return; }
+  var go = e.target.closest && e.target.closest('[data-mailgo]'); if (!go || go.disabled) return;
+  var inp = document.getElementById('ux-mail-in'), v = inp ? inp.value.trim() : ''; if (!okMail(v)) { var er = document.querySelector('.ux-merr'); if (er) er.hidden = false; return; }
+  st.mail = v; st.req[K] = { st: 'queued', amt: amount(o, sel), sub: describe(o, sel), slot: sel.slot }; save(); recDirty = true; openSheet('added', K); }, true);
+
 /* ---------- hojas y avisos ---------- */
 var sheet = null;
 /* V6 · dos extras sugeridos bajo un solo título (los que se añaden en un toque) */
@@ -714,7 +792,7 @@ function addedHTML(k){ var c = inCart(k), rq = !c && st.req[k], n = st.cart.leng
   if (D === 'old-v65') return '<ol class="ux-a5"><li class="d"><i>' + ic('check') + '</i>Choose</li><li class="d"><i>' + ic('check') + '</i>Added to cart</li><li class="n"><i>3</i>Pay</li></ol><h3>One step left: pay in your cart</h3><p>' + what + ' · ' + sub + '. It’s in your cart with ' + (n > 1 ? (n - 1) + ' more extra' + (n > 2 ? 's' : '') : 'nothing else yet') + '.</p>'
     + '<div class="ux-sbt">' + go('Go to cart and pay · ' + tot) + keep + '</div>';
   /* V6 */
-  return '<div class="ux-a2 ux-a2l"><span class="cart">' + ic('cart') + '<i>' + n + '</i></span><h3>Added to your cart</h3></div><p><b>' + what + '</b> · ' + sub + '</p>' + ''   /* (sin aviso de aprobación en «Added»: ya se explica en la nota «Needs approval» de la hoja de opciones) */
+  return '<div class="ux-a2 ux-a2l"><span class="cart">' + ic('cart') + '<i>' + n + '</i></span><h3>Added to your cart</h3></div><p><b>' + what + '</b> · ' + sub + '</p>' + confMail(k)   /* (sin aviso de aprobación en «Added»: ya se explica en la nota «Needs approval» de la hoja de opciones) */
     + (k === K && v67() ? '<div class="ux-adj">' + choice() + '</div>' : '')
     + cross2(k)
     + '<div class="ux-sbt">' + go(goLbl()) + keep + '</div>'; }   /* el «pop» del precio solo al cambiar una opción, nunca al abrir */
@@ -730,6 +808,10 @@ function openSheet(kind, k){ var h = ''; sheetKind = kind;
     var m6 = document.querySelector('.ux-m6'); if (m6 && !desk && !(D === 'old-v65' && slotted(o))) { var top = Math.max(0, m6.getBoundingClientRect().top); lockH(sheet.querySelector('.ux-sheet'), Math.min(window.innerHeight * 0.92, window.innerHeight - top)); fitOpts(); }
     var tsel = sheet.querySelector('.ux-times [aria-checked="true"]'); if (tsel) { var tb = tsel.parentNode; tb.scrollLeft = tsel.offsetLeft - tb.clientWidth / 2 + tsel.offsetWidth / 2; } return; }
   if (kind === 'added') h = addedHTML(k);
+  else if (kind === 'email') h = mailHTML();
+  else if (kind === 'mailafter') { var pdn = payDone || { pd: 0, n: 1 }; h = '<span class="ux-sb ok">' + ic('check') + '</span><h3>' + (pdn.pd ? 'Paid ' + eur(pdn.pd) + ' · ' : '') + (pdn.n > 1 ? 'requests sent' : 'request sent') + '</h3><p>We’re checking ' + (pdn.n > 1 ? 'your requests' : 'it') + ' now.' + (pdn.hold ? ' The ' + eur(pdn.hold) + ' is only held on your card, not charged, until we confirm.' : '') + '</p>'
+      + '<div class="ux-mailf ux-maila"><p class="ux-k"><label for="ux-mail-in">Where should we send our answer?</label></p><input id="ux-mail-in" class="ux-min" type="email" inputmode="email" autocomplete="email" placeholder="name@email.com" value="' + esc(mailDraft) + '"><p class="ux-mhint">We don’t have your email yet. Only used for updates on ' + (pdn.n > 1 ? 'these requests' : 'this request') + '.</p><p class="ux-merr" hidden>Add your email so we can send you our answer.</p></div>'
+      + '<div class="ux-sbt"><button type="button" class="ux-cta full" data-mailsave>Save email</button></div>'; }
   else if (kind === 'request') { var r = st.req[k]; h = '<span class="ux-sb rq">' + ic('clock') + '</span><h3>Send your request now?</h3><p>We hold ' + eur(r.amt) + ' on your card and we get your request straight away. You’re only charged once we confirm.</p>'
       + '<div class="ux-sbt"><button type="button" class="ux-cta full" data-send="' + k + '">Send request · ' + eur(r.amt) + '</button><button type="button" class="ux-cta full ghost" data-go="list">Send later, with my other extras</button></div>'; }
   else if (kind === 'cancel') { var rc = st.req[k]; h = '<span class="ux-sb no">' + ic('x') + '</span><h3>Cancel this request?</h3><p>' + 'We won’t process it anymore and the ' + eur(rc.amt) + ' hold is released. You can request it again before you arrive.</p>'
@@ -739,7 +821,11 @@ function openSheet(kind, k){ var h = ''; sheetKind = kind;
   swapClose(); sheet = document.createElement('div'); sheet.className = 'ux-ov';
   sheet.innerHTML = '<div class="ux-dim" data-close></div><div class="ux-sheet" role="dialog" aria-modal="true">' + '<button type="button" class="ux-x ux-shx" data-close aria-label="Close">' + ic('x') + '</button>' + h + '</div>';
   document.body.appendChild(sheet); document.documentElement.classList.add('ux-lock');
-  if (desk && LV === 'v2') [].slice.call(sheet.querySelectorAll('.ux-x2 .r'), 3).forEach(function(r){ r.remove(); });   /* escritorio: como en el móvil, solo unas pocas recomendaciones */
+  if (desk && EC && kind === 'email') { apprH = sheet.querySelector('.ux-sheet').offsetHeight; }   /* f6 escritorio: la página de aprobación marca el alto (el de su contenido) */
+  if (desk && EC && kind === 'added') { var shd = sheet.querySelector('.ux-sheet'), rws = [].slice.call(shd.querySelectorAll('.ux-x2 .r'));   /* … y «Added to your cart» copia ese alto y mete tantas recomendaciones como quepan */
+    if (apprH) { shd.style.setProperty('height', apprH + 'px', 'important'); shd.style.setProperty('min-height', apprH + 'px', 'important'); shd.style.setProperty('max-height', apprH + 'px', 'important'); }
+    for (var rx = rws.length - 1; rx >= 0 && shd.scrollHeight > shd.clientHeight + 1; rx--) rws[rx].remove(); }
+  else if (desk && LV === 'v2') [].slice.call(sheet.querySelectorAll('.ux-x2 .r'), 3).forEach(function(r){ r.remove(); });   /* escritorio: como en el móvil, solo unas pocas recomendaciones */
   if (!desk && isV6() && !(optsTop > 0) && document.querySelector('.ux-m6')) optsTop = Math.max(0, document.querySelector('.ux-m6').getBoundingClientRect().top);
   if (!desk && isV6() && optsTop > 0 && kind !== 'partner') { var sh0 = sheet.querySelector('.ux-sheet'); sh0.classList.add('ux-same'); sheet.classList.add('ux-ov-same'); var room = window.innerHeight - optsTop, rows = sh0.querySelectorAll('.ux-x2 .r');
     /* tantos deals recomendados como quepan en el alto fijo: se mide la hoja a su alto natural y se quitan filas desde abajo hasta que cabe */
@@ -750,6 +836,7 @@ function openSheet(kind, k){ var h = ''; sheetKind = kind;
     if (out.length || !fits()) { var box = sh0.querySelector('.ux-x2'), add = 0; sh0.classList.add('ux-tight');
       while (out.length && fits()) { box.appendChild(out[0]); if (fits()) { out.shift(); add++; } else { out[0].remove(); break; } }
       if (!add && fits()) { sh0.classList.remove('ux-tight'); if (!fits()) sh0.classList.add('ux-tight'); } }
+    if (!fits() && sh0.querySelector('.ux-mailc')) { var bx2 = sh0.querySelector('.ux-x2'); if (bx2) bx2.remove(); if (!fits()) { var mh = sh0.querySelector('.ux-mhint'); if (mh) mh.remove(); } if (!fits()) { var stp = sh0.querySelector('.ux-mu-st'), one = sh0.querySelector('.ux-mu-1'); if (stp && one) { stp.remove(); one.hidden = false; } } ['.ux-mu-l', '.ux-mu-h small', '.ux-sbt [data-go="list"]'].forEach(function(q){ if (!fits()) { var e = sh0.querySelector(q); if (e) e.remove(); } }); }   /* sin sitio: los 3 pasos pasan a una frase */   /* f2: el email manda; si no cabe, fuera los recomendados (y la ayuda) */
     lockH(sh0, room);   /* el segundo deal solo si cabe sin crecer */ }   /* misma altura que la hoja de compra */
   var f = sheet.querySelector('.ux-cta'); if (f) f.focus({ preventScroll: true }); }
 /* al pasar de una hoja a otra no se repinta la página de debajo; eso queda para cuando se cierra del todo */
@@ -947,6 +1034,12 @@ document.addEventListener('click', function(e){
     if (act === 'opts') { openSheet('opts', K); return; }
     if (act === 'add68') { addLine(K, JSON.parse(JSON.stringify(sel))); save(); go('cart'); return; }
     if (act === 'add') { addLine(K, JSON.parse(JSON.stringify(sel))); recDirty = true; openSheet('added', K); return; }   /* la página se repinta al cerrar la hoja (con la de opciones abierta render() no hace nada) */
+    if (act === 'request' && needMail() && EC && desk) { openSheet('email', K); setTimeout(function(){ var i = document.getElementById('ux-mail-in'); if (i) i.focus(); }, 80); return; }   /* f6 escritorio: la misma página que en móvil, como modal antes de «Added to your cart» */
+    if (act === 'request' && needMail() && (EP || (EC && !desk))) { askMail(); return; }   /* f6 en móvil: no cabe en «Added to your cart», va en una página antes */
+    if (act === 'request' && needMail() && !EM && !EA) { var mi = document.getElementById('ux-mail-in');
+      if (!mi) { askMail(); return; }
+      var mv = mi.value.trim(); if (!okMail(mv)) { var me = document.querySelector('.ux-mailf .ux-merr'); if (me) { me.textContent = mv ? 'Check the email, it looks incomplete.' : 'Add your email so we can send you our answer.'; me.hidden = false; } mi.focus(); return; }
+      st.mail = mv; save(); }   /* FV: sin email del huésped, lo pedimos antes de mandar la solicitud */
     if (act === 'request') { st.req[K] = { st: 'queued', amt: amount(o, sel), sub: describe(o, sel), slot: sel.slot }; save(); recDirty = true; openSheet('added', K); return; }   /* sin el paso «Send it to Marta now?»: la misma hoja que en automático */
     if (act === 'pack') { var on = packOn(); packKeys().forEach(function(k){ if (on[k] === 0) return; var ds = defSel(O[k]); if (manual(O[k])) st.req[k] = { st: 'queued', amt: amount(O[k], ds), sub: describe(O[k], ds), slot: ds.slot }; else addLine(k, ds); }); save(); go('mine'); return; }
     if (act === 'pay') { var q = keys(['queued']); q.forEach(function(k){ st.req[k].st = 'waiting'; st.req[k].at = 'Sent today, 10:24'; }); var pd = toPay(); st.paid = (st.paid || []).concat(st.cart); markBought(); st.cart = []; save(); render(); toast((pd ? 'Paid ' + eur(pd) : 'Done') + (q.length ? ' · request sent' : '')); return; } }
@@ -985,4 +1078,10 @@ document.addEventListener('mouseover', function(e){ var t = e.target.closest && 
   requestAnimationFrame(function(){ var h = tb.offsetHeight, r = t.getBoundingClientRect(); t.classList.toggle('ux-tip-up', r.bottom + 8 + h > window.innerHeight - 12); }); });
 if (document.readyState !== 'loading') { init(); backRow(); } else document.addEventListener('DOMContentLoaded', function(){ init(); backRow(); });
 setTimeout(backRow, 400);
+/* ?go= (lo usa la lista «What changed» de flows.html): abre la hoja de opciones (opts) o pulsa Request para enseñar el paso del email (mail) */
+(function(){ var g = Q.get('go'); if (!g) return;
+  setTimeout(function(){ var b = document.querySelector('#ux-fbar [data-act="opts"], [data-act="opts"]'); if (b && !desk) b.click();
+    if (g === 'cart') { go('cart'); return; }
+    if (g === 'pay') { var pb = document.querySelector('[data-act="pay"]'); if (pb) pb.click(); return; }
+    if (g === 'mail') setTimeout(function(){ var r = document.querySelector('.ux-opsh [data-act="request"]'); if (r) r.click(); }, 600); }, 1100); })();
 })();

@@ -2199,3 +2199,228 @@ html.ux-rv2 .ux-s-list>.ux-top+*,html.ux-rv3 .ux-s-list>.ux-top+*{margin-top:20p
 .ux-dstx small{display:block;font-size:12.5px;line-height:1.35;color:#4a4f86;white-space:normal}
 .ux-dstate.ux-ds-sent .ux-dstx small{color:#5b6383}
 .ux-dstate .ux-cta{grid-column:1/-1!important;margin:0!important}
+
+/* ===== Vlad feedback (d=….f1, 12-nov-2026) ===== */
+/* 1 · contador de producción (Search reservation / Confirm guests count): en una fila, etiqueta + precio a la izquierda, − gris y + azul en círculo a la derecha */
+html.ux-fv1 .ux-opsh .ux-ob6:not(.ux-obv) .ux-blk.ux-row{flex-wrap:nowrap!important;align-items:center!important}
+html.ux-fv1 .ux-opsh .ux-ob6:not(.ux-obv) .ux-blk.ux-row>span:not(.ux-stp){flex:1 1 auto!important;display:flex!important;flex-direction:column!important;align-items:flex-start!important;justify-content:center!important;gap:2px!important;min-width:0;width:auto!important}
+html.ux-fv1 .ux-opsh .ux-ob6:not(.ux-obv) .ux-blk.ux-row>span:not(.ux-stp) small{display:block!important}
+html.ux-fv1 .ux-opsh .ux-ob6:not(.ux-obv) .ux-blk.ux-row .ux-stp{flex:0 0 auto!important;width:auto!important;max-width:none!important;height:auto!important;padding:0!important;gap:12px!important;background:none!important;border-radius:0!important}
+html.ux-fv1 .ux-opsh .ux-ob6:not(.ux-obv) .ux-blk.ux-row .ux-stp button{width:44px!important;height:44px!important;border-radius:50%!important;background:#f1f3fb!important;color:#161643!important}
+html.ux-fv1 .ux-opsh .ux-ob6:not(.ux-obv) .ux-blk.ux-row .ux-stp button[data-dl="1"]{background:var(--b,#385bf8)!important;color:#fff!important}
+html.ux-fv1 .ux-opsh .ux-ob6:not(.ux-obv) .ux-blk.ux-row .ux-stp button:disabled{background:#f6f7fb!important;color:#c3c8e0!important;opacity:1!important}
+html.ux-fv1 .ux-opsh .ux-ob6:not(.ux-obv) .ux-blk.ux-row .ux-stp output{min-width:24px!important;font-size:20px!important;font-weight:700!important;color:#161643!important}
+html.ux-fv1 .ux-opsh.ux-opc3 .ux-ob6:not(.ux-obv) .ux-blk.ux-row .ux-stp button{width:38px!important;height:38px!important}
+/* el mismo contador en la barra azul marino (deals solo de unidades): − translúcido, + azul, ambos en círculo */
+html.ux-fv1 .ux-b66 .ux-stp{background:none!important;padding:0!important;gap:10px!important}
+html.ux-fv1 .ux-b66 .ux-stp button{border-radius:50%!important;background:rgba(255,255,255,.14)!important;color:#fff!important}
+html.ux-fv1 .ux-b66 .ux-stp button[data-dl="1"]{background:var(--b,#385bf8)!important}
+html.ux-fv1 .ux-b66 .ux-stp button:disabled{opacity:.35!important}
+/* 2 · sin sombras en escritorio: columna derecha (Vela / compra) y tarjeta del botón de pago de My extras */
+html.ux-fv1.ux-desk.ux-desk aside[data-slot][data-slot],html.ux-fv1.ux-desk aside{box-shadow:none!important}
+html.ux-fv1.ux-desk .ux-dk{box-shadow:none!important;background:none!important;padding:0!important}
+/* 3 · email del huésped: dentro de la misma hoja / panel, sin modal, sin bordes */
+.ux-opsh.ux-mailon>*:not(.ux-mail){display:none!important}
+.ux-mail{display:flex;flex-direction:column;gap:12px;padding:6px 2px 4px;height:100%;box-sizing:border-box;text-align:left}
+.ux-opsh.ux-mailon .ux-mail{padding:18px 20px calc(18px + env(safe-area-inset-bottom))}
+html.ux-desk .ux-dbuy .ux-opsh.ux-mailon .ux-mail{padding:4px 0 0}
+.ux-mback{align-self:flex-start;display:inline-flex;align-items:center;gap:4px;padding:6px 12px 6px 8px;border:0;border-radius:999px;background:#f1f3fb;color:#161643;font:600 13px/1 inherit;cursor:pointer}
+.ux-mback .ux-ic{width:16px;height:16px}
+.ux-mic{display:grid;place-items:center;width:48px;height:48px;margin-top:6px;border-radius:14px;background:#e8edff;color:var(--b,#385bf8)}
+.ux-mic .ux-ic{width:24px;height:24px}
+.ux-mail h3{margin:2px 0 0;font-size:20px;line-height:1.2;font-weight:700;color:#161643}
+.ux-mail>p{margin:0;font-size:14px;line-height:1.45;color:#6b6b95}
+.ux-mlab{margin-top:4px;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#6b6b95}
+.ux-min{width:100%;height:52px;padding:0 16px;border:0;border-radius:14px;background:#f1f3fb;color:#161643;font:500 16px inherit;box-sizing:border-box;outline:none}
+.ux-min:focus{background:#e8edff}
+.ux-mail .ux-merr{font-size:13px;color:#d6455d}
+.ux-mgo{margin-top:auto;height:52px;border-radius:12px!important;background:#2ac273!important;color:#fff!important;font-weight:700}
+.ux-mgo:disabled{background:#e3e6f2!important;color:#9aa1c2!important;cursor:not-allowed}
+html.ux-desk .ux-dbuy .ux-mgo{margin-top:8px}
+@media (max-height:700px){.ux-opsh.ux-mailon .ux-mail{gap:10px}.ux-opsh.ux-mailon .ux-mic{display:none}.ux-opsh.ux-mailon .ux-mail h3{font-size:18px}}
+html:not(.ux-desk) .ux-opsh.ux-mailon .ux-mail{position:absolute;inset:0;height:auto}
+html.ux-fv1.ux-desk .ux-dk .ux-buy>.ux-cta.full{width:100%!important;max-width:none!important;margin:0!important}
+/* 3b · campo de email dentro de la hoja / panel de opciones (deal manual sin email) */
+.ux-mailf .ux-k label{font:inherit;color:inherit;cursor:pointer}
+.ux-mailf .ux-min{height:48px;margin-top:8px}
+.ux-mailf .ux-merr{margin:6px 2px 0;font-size:12.5px;color:#d6455d}
+.ux-mailf .ux-merr[hidden]{display:none}
+html.ux-v6m .ux-opsh.ux-opc2 .ux-mailf .ux-min,html.ux-v6m .ux-opsh.ux-opc3 .ux-mailf .ux-min{height:42px;margin-top:6px}
+/* 3c · f2: email en la hoja de confirmación «Added to your cart» */
+html.ux-fv1 .ux-mailc{margin:14px 0 6px;text-align:left}
+html.ux-fv1 .ux-mailc .ux-k{margin:0;font-size:15px;font-weight:700;color:#161643}
+html.ux-fv1 .ux-mailc .ux-mhint{margin:6px 2px 0;font-size:12.5px;color:#6b6b95}
+html.ux-fv1 .ux-mailc .ux-mhint[hidden]{display:none}
+/* 3d · f4: email después de pagar (hoja de éxito en My extras) */
+html.ux-fv1 .ux-maila{margin:16px 0 14px;text-align:left}
+html.ux-fv1 .ux-maila .ux-k{margin:0;font-size:15px;font-weight:700;color:#161643}
+html.ux-fv1 .ux-mailf .ux-mhint{margin:6px 2px 0;font-size:12.5px;line-height:1.4;color:#6b6b95;text-align:left}
+html.ux-fv1 .ux-mailf .ux-mhint[hidden]{display:none}
+/* 3e · f5: «Needs approval» y el email en un solo bloque (contexto de por qué pedimos el email) */
+html.ux-fm5 .ux-opsh:has(.ux-mailu) .ux-ofm>.ux-as{display:none!important}
+html.ux-fm5 .ux-mailu{padding:14px!important;border-radius:16px;background:#f1f3fb}
+html.ux-fm5 .ux-mu-h{display:flex;align-items:flex-start;gap:10px}
+html.ux-fm5 .ux-mu-i{flex:none;display:grid;place-items:center;width:32px;height:32px;border-radius:10px;background:#e3e6f2;color:#5b6383}
+html.ux-fm5 .ux-mu-i .ux-ic{width:17px;height:17px}
+html.ux-fm5 .ux-mu-h b{display:block;font-size:14.5px;font-weight:700;color:#161643;line-height:1.3}
+html.ux-fm5 .ux-mu-h small{display:block;margin-top:2px;font-size:12.5px;line-height:1.4;color:#5b6383}
+html.ux-fm5 .ux-mu-l{display:block;margin:12px 0 6px;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#6b6b95}
+html.ux-fm5 .ux-mailu .ux-min{margin-top:0!important;background:#fff}
+html.ux-fm5 .ux-mailu .ux-min:focus{background:#fff;box-shadow:inset 0 0 0 2px #c9d3ff}
+html.ux-v6m.ux-fm5 .ux-opsh.ux-opc1 .ux-mailu{padding:12px!important}
+html.ux-v6m.ux-fm5 .ux-opsh.ux-opc2 .ux-mu-l{display:none}
+html.ux-v6m.ux-fm5 .ux-opsh.ux-opc2 .ux-mailu .ux-min{margin-top:10px!important}
+html.ux-v6m.ux-fm5 .ux-opsh.ux-opc3 .ux-mailu{padding:10px 12px!important}
+html.ux-v6m.ux-fm5 .ux-opsh.ux-opc3 .ux-mu-i{width:28px;height:28px}
+html.ux-v6m.ux-fm5 .ux-opsh.ux-opc4 .ux-mailu .ux-min{height:40px!important;margin-top:8px!important}
+html.ux-v6m.ux-fm5 .ux-opsh.ux-opc5 .ux-mu-i{display:none}
+html.ux-v6m.ux-fm5 .ux-opsh.ux-opc5 .ux-mailu{padding:8px 12px!important}
+html.ux-v6m.ux-fm5 .ux-opsh.ux-opc6 .ux-mailu .ux-min{height:38px!important;margin-top:6px!important}
+html.ux-v6m.ux-fm5 .ux-opsh.ux-opc6 .ux-mu-h b{font-size:13.5px}
+html.ux-fm5 .ux-opsh .ux-ob6 .ux-blk.ux-mailu{background:#f1f3fb!important;padding:14px!important;border-radius:16px!important;margin-top:0}
+html.ux-fm5 .ux-opsh .ux-ob6 .ux-blk.ux-mailu .ux-min{background:#fff!important}
+/* 3f · f6: el bloque unificado dentro de la confirmación «Added to your cart» */
+html.ux-fm5 .ux-mailc.ux-mailu{margin:14px 0 6px!important;padding:14px!important;border-radius:16px;background:#f1f3fb!important;text-align:left}
+html.ux-fm5 .ux-mailc.ux-mailu .ux-min{background:#fff!important}
+/* 3g · pasos de la solicitud dentro del bloque (f6) */
+html.ux-fm5 .ux-mailc .ux-mu-h{align-items:center}
+html.ux-fm5 .ux-mu-st{list-style:none;margin:12px 0 0;padding:0;display:flex;flex-direction:column;gap:10px}
+html.ux-fm5 .ux-mu-st li{display:flex;align-items:flex-start;gap:10px}
+html.ux-fm5 .ux-mu-st i{flex:none;display:grid;place-items:center;width:22px;height:22px;margin-top:1px;border-radius:50%;background:#fff;color:#385bf8;font:700 12px/1 inherit;font-style:normal}
+html.ux-fm5 .ux-mu-st b{display:block;font-size:13.5px;font-weight:700;color:#161643;line-height:1.3}
+html.ux-fm5 .ux-mu-st small{display:block;font-size:12.5px;line-height:1.35;color:#5b6383}
+html.ux-fm5 .ux-mailc .ux-mu-l{text-transform:none;letter-spacing:0;font-size:14px;color:#161643;margin-top:14px}
+html.ux-fm5 .ux-mu-st{gap:8px;margin-top:10px}
+html.ux-fm5 .ux-mu-st li>span{font-size:13px;line-height:1.4;color:#5b6383}
+html.ux-fm5 .ux-mu-st li>span b{display:inline;font-size:13px;color:#161643}
+html.ux-v6m.ux-fm5 .ux-opsh.ux-opc4 .ux-mailu{padding:10px 12px!important}
+html.ux-fm5 .ux-mu-1{margin:8px 0 0;font-size:13px;line-height:1.45;color:#5b6383}
+html.ux-fm5 .ux-mu-1[hidden]{display:none}
+html.ux-fm5 .ux-mu-sh{display:none!important}
+html.ux-v6m.ux-fm5 .ux-opsh.ux-opc3 .ux-mu-lg{display:none!important}
+html.ux-v6m.ux-fm5 .ux-opsh.ux-opc3 .ux-mu-sh{display:block!important}
+html.ux-fm5 .ux-opsh .ux-ob6 .ux-blk.ux-mailu{padding:12px 14px!important}
+html.ux-v6m.ux-fm5 .ux-opsh.ux-opc3 .ux-mu-h small{font-size:12px;line-height:1.35}
+html.ux-v6m.ux-fm5 .ux-opsh.ux-opc5 .ux-ob6 .ux-blk.ux-mailu{padding:8px 12px!important}
+html.ux-v6m.ux-fm5 .ux-opsh.ux-opc6 .ux-ob6 .ux-blk.ux-mailu{padding:6px 10px!important}
+html.ux-v6m.ux-fm5 .ux-opsh.ux-opc6 .ux-mailu .ux-min{height:36px!important;margin-top:6px!important;font-size:15px}
+html.ux-v6m.ux-fm5 .ux-opsh.ux-opc6 .ux-mu-h small{font-size:11.5px}
+html.ux-fm5 .ux-mailc.ux-mailu{padding:12px 14px!important}
+/* 3h · f6 en móvil: la explicación + email en una página antes de «Added to your cart» */
+html.ux-fm5 .ux-mailp{gap:10px}
+html.ux-fm5 .ux-mailp .ux-mu-h{display:flex;align-items:center;gap:10px;margin-top:6px}
+html.ux-fm5 .ux-mailp .ux-mu-h b{font-size:19px}
+html.ux-fm5 .ux-mailp .ux-mp-in{margin:0;font-size:14px;line-height:1.45;color:#5b6383}
+html.ux-fm5 .ux-mailp .ux-mu-st{margin:2px 0 0;padding:12px 14px;border-radius:16px;background:#f1f3fb}
+html.ux-fm5 .ux-mailp .ux-mu-1{margin:0;padding:12px 14px;border-radius:16px;background:#f1f3fb}
+html.ux-fm5 .ux-mailp .ux-mlab{text-transform:none;letter-spacing:0;font-size:15px;color:#161643;margin-top:6px}
+html.ux-v6m.ux-fm6 .ux-opsh.ux-opc5 .ux-mu-h b{font-size:13px}
+html.ux-v6m.ux-fm5 .ux-opsh.ux-opc6 .ux-mailu .ux-mu-h b{display:none}
+/* ===== 3i · página de aprobación (f6, móvil): X arriba y 3 estilos (Deal settings → «Approval page») ===== */
+html.ux-fm5 .ux-mailp{gap:12px!important;padding-top:20px!important}
+html.ux-fm5 .ux-mailp .ux-mpx{position:absolute;top:14px;right:14px;z-index:2}
+html.ux-fm5 .ux-mailp .ux-mp-top{display:flex;align-items:flex-start;gap:12px;padding-right:44px}
+html.ux-fm5 .ux-mailp .ux-mp-t{display:block;font-size:20px;line-height:1.25;font-weight:700;color:#161643}
+html.ux-fm5 .ux-mailp .ux-mp-in{margin:4px 0 0;font-size:13.5px;line-height:1.45;color:#5b6383}
+html.ux-fm5 .ux-mailp .ux-mu-st{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;background:none}
+html.ux-fm5 .ux-mailp .ux-mu-st li{display:flex;align-items:flex-start;gap:10px}
+html.ux-fm5 .ux-mailp .ux-mu-st li>span{font-size:13px;line-height:1.4;color:#5b6383}
+html.ux-fm5 .ux-mailp .ux-mu-st li>span b{font-size:13px;color:#161643}
+html.ux-fm5 .ux-mailp .ux-mu-st em{display:none}
+html.ux-fm5 .ux-mailp .ux-mp-mail{display:flex;flex-direction:column;gap:8px}
+html.ux-fm5 .ux-mailp .ux-mlab{margin:0;text-transform:none;letter-spacing:0;font-size:15px;font-weight:700;color:#161643}
+html.ux-fm5 .ux-mailp .ux-mgo{margin-top:auto}
+
+/* V1 · Azul: icono y números en azul de marca, caja de pasos y campo en azul suave, botón azul (desactivado en azul claro, no gris) */
+html.ux-fm5 .ux-mpv1 .ux-mu-i{flex:none;display:grid;place-items:center;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#5b7bff,#385bf8);color:#fff}
+html.ux-fm5 .ux-mpv1 .ux-mu-i .ux-ic{width:22px;height:22px}
+html.ux-fm5 .ux-mpv1 .ux-mu-st,html.ux-fm5 .ux-mpv1 .ux-mu-1{padding:14px;border-radius:18px;background:#eef2ff}
+html.ux-fm5 .ux-mpv1 .ux-mu-st i{flex:none;display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:#385bf8;color:#fff;font:700 12px/1 inherit;font-style:normal}
+html.ux-fm5 .ux-mpv1 .ux-min{background:#eef2ff!important}
+html.ux-fm5 .ux-mpv1 .ux-min:focus{background:#e3e9ff!important}
+html.ux-fm5 .ux-mpv1 .ux-mgo{background:#385bf8!important;color:#fff!important}
+html.ux-fm5 .ux-mpv1 .ux-mgo:disabled{background:#c7d3ff!important;color:#fff!important}
+
+
+
+
+
+
+/* V1 con la cabecera centrada de la V2 (Dani, 12-nov) */
+html.ux-fm5 .ux-mpv1 .ux-p4-hero{display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;padding:4px 30px 0}
+html.ux-fm5 .ux-mpv1 .ux-p4-ring{display:grid;place-items:center;width:52px;height:52px;border-radius:50%;background:#385bf8;color:#fff;box-shadow:0 0 0 8px #e8edff;margin-bottom:6px}
+html.ux-fm5 .ux-mpv1 .ux-p4-ring .ux-ic{width:24px;height:24px}
+html.ux-fm5 .ux-mpv1 .ux-p4-hero .ux-mp-in{margin:0}
+/* escritorio (f5/f6): el modal de aprobación y el de «Added to your cart» con el mismo tamaño */
+html.ux-desk.ux-fm5 .ux-sheet:has(.ux-mailp),html.ux-desk.ux-fm5 .ux-sheet:has(.ux-a2l){height:min(576px,calc(100vh - 48px))!important;max-height:none!important;display:flex!important;flex-direction:column!important;overflow:hidden!important;box-sizing:border-box}
+html.ux-desk.ux-fm5 .ux-sheet:has(.ux-mailp) .ux-mailp{flex:1 1 auto;min-height:0}
+html.ux-desk.ux-fm5 .ux-sheet:has(.ux-mailp) .ux-mgo{margin-top:auto!important}
+html.ux-desk.ux-fm5 .ux-sheet:has(.ux-a2l) .ux-sbt{margin-top:auto!important}
+/* ===== f6 · aprobación y «Added to your cart» con la misma rejilla (Dani, 12-nov): misma X, cabecera centrada, márgenes y botones en el mismo sitio ===== */
+html.ux-desk.ux-fm6 .ux-sheet:has(.ux-mailp),html.ux-desk.ux-fm6 .ux-sheet:has(.ux-a2l){padding:24px!important}
+html.ux-desk.ux-fm6 .ux-sheet .ux-mailp{padding:0!important;gap:0!important}
+html.ux-v6m.ux-fm6 .ux-opsh.ux-mailon .ux-mailp{padding:24px 20px calc(20px + env(safe-area-inset-bottom))!important;gap:0!important}
+/* X */
+html.ux-fm6 .ux-mailp .ux-mpx,html.ux-fm6 .ux-sheet:has(.ux-a2l) .ux-shx,html.ux-fm6 .ux-sheet:has(.ux-a2l)>.ux-x{position:absolute!important;top:16px!important;right:16px!important;width:34px!important;height:34px!important;margin:0!important}
+/* cabecera: icono 52 con halo, título 20, subtítulo 13,5, todo centrado */
+html.ux-fm6 .ux-mailp .ux-p4-hero{gap:0!important;padding:0 32px!important}
+html.ux-fm6 .ux-mailp .ux-p4-ring,html.ux-fm6 .ux-a2.ux-a2l .cart{position:relative;display:grid!important;place-items:center;width:52px!important;height:52px!important;margin:8px 0 0!important;border-radius:50%!important;background:#385bf8!important;color:#fff!important;box-shadow:0 0 0 8px #e8edff!important}
+html.ux-fm6 .ux-a2.ux-a2l .cart .ux-ic{width:24px;height:24px}
+html.ux-fm6 .ux-a2.ux-a2l .cart i{position:absolute;top:-6px;right:-6px}
+html.ux-fm6 .ux-a2.ux-a2l{display:flex!important;flex-direction:column!important;align-items:center!important;gap:0!important;margin:0!important;padding:0 32px!important;text-align:center}
+html.ux-fm6 .ux-mailp .ux-mp-t,html.ux-fm6 .ux-a2.ux-a2l h3{margin:20px 0 0!important;font-size:20px!important;line-height:1.25!important;font-weight:700!important;color:#161643!important;text-align:center}
+html.ux-fm6 .ux-mailp .ux-p4-hero .ux-mp-in,html.ux-fm6 .ux-sheet:has(.ux-a2l) .ux-a2l+p{margin:6px auto 0!important;max-width:320px;font-size:13.5px!important;line-height:1.45!important;color:#5b6383!important;text-align:center}
+/* contenido: mismo arranque bajo la cabecera */
+html.ux-fm6 .ux-mailp .ux-mu-st,html.ux-fm6 .ux-mailp .ux-mu-1:not([hidden]),html.ux-fm6 .ux-sheet:has(.ux-a2l) .ux-x2{margin-top:20px!important}
+html.ux-fm6 .ux-mailp .ux-mp-mail{margin-top:16px!important}
+/* pie: botón principal 52 y secundario 44, pegados abajo y en el mismo sitio */
+html.ux-fm6 .ux-mailp .ux-mp-ft,html.ux-fm6 .ux-sheet:has(.ux-a2l) .ux-sbt{display:flex!important;flex-direction:column!important;gap:4px!important;margin-top:auto!important;padding-top:16px!important}
+html.ux-fm6 .ux-mailp .ux-mp-ft .ux-mgo{margin:0!important}
+html.ux-fm6 .ux-mailp .ux-mp-ft .ux-cta:first-child,html.ux-fm6 .ux-sheet:has(.ux-a2l) .ux-sbt .ux-cta:first-child{height:52px!important;border-radius:12px!important;font-size:15px!important}
+html.ux-fm6 .ux-mailp .ux-mp-ft .ghost,html.ux-fm6 .ux-sheet:has(.ux-a2l) .ux-sbt .ghost{height:44px!important;background:none!important;color:#161643!important;font-size:14.5px!important;font-weight:700!important}
+html.ux-desk.ux-fm6 .ux-sheet:has(.ux-mailp),html.ux-desk.ux-fm6 .ux-sheet:has(.ux-a2l){height:min(624px,calc(100vh - 48px))!important;gap:0!important}
+html.ux-fm6 .ux-mailp .ux-mp-ft .ghost{height:48px!important}
+html.ux-v6m.ux-fm6 .ux-sheet:has(.ux-a2l){padding:24px 20px calc(20px + env(safe-area-inset-bottom))!important;gap:0!important}
+html.ux-fm6 .ux-sheet:has(.ux-a2l) .ux-sbt .ghost{height:48px!important}
+/* página de aprobación en móvil: compactar sin tocar el texto */
+html.ux-fm6 .ux-mailp.ux-mpc1 .ux-mu-st,html.ux-fm6 .ux-mailp.ux-mpc1 .ux-mu-1:not([hidden]){margin-top:14px!important}
+html.ux-fm6 .ux-mailp.ux-mpc1 .ux-mp-mail{margin-top:12px!important}
+html.ux-fm6 .ux-mailp.ux-mpc1 .ux-mp-ft{padding-top:12px!important}
+html.ux-fm6 .ux-mailp.ux-mpc2 .ux-p4-ring{width:40px!important;height:40px!important;box-shadow:0 0 0 6px #e8edff!important;margin-top:6px!important}
+html.ux-fm6 .ux-mailp.ux-mpc2 .ux-p4-ring .ux-ic{width:20px;height:20px}
+html.ux-fm6 .ux-mailp.ux-mpc2 .ux-mp-t{margin-top:14px!important;font-size:18px!important}
+html.ux-fm6 .ux-mailp.ux-mpc2 .ux-mu-st{padding:10px 12px!important;gap:5px!important}
+html.ux-fm6 .ux-mailp.ux-mpc3 .ux-min{height:44px!important}
+html.ux-fm6 .ux-mailp.ux-mpc3 .ux-mgo{height:46px!important}
+html.ux-fm6 .ux-mailp.ux-mpc3 .ux-mp-mail{gap:6px!important}
+html.ux-fm6 .ux-mailp.ux-mpc4 .ux-mu-st li>span,html.ux-fm6 .ux-mailp.ux-mpc4 .ux-mu-st li>span b{font-size:12px!important;line-height:1.35!important}
+html.ux-fm6 .ux-mailp.ux-mpc4 .ux-mp-in{font-size:12.5px!important}
+html.ux-fm6 .ux-mailp.ux-mpc4{padding-top:18px!important}
+/* f5: el texto del bloque no se acorta nunca (Dani, 12-nov) */
+html.ux-v6m.ux-fm5 .ux-opsh.ux-opc3 .ux-mu-lg{display:block!important}
+html.ux-v6m.ux-fm5 .ux-opsh.ux-opc3 .ux-mu-sh,html.ux-fm5 .ux-mu-sh{display:none!important}
+html.ux-v6m.ux-fm5 .ux-opsh.ux-opc6 .ux-mailu .ux-mu-h b{display:block!important}
+html.ux-v6m.ux-fm5 .ux-opsh.ux-opc2 .ux-mu-l{display:block!important}
+html.ux-fm6 .ux-mailp .ux-mpx svg,html.ux-fm6 .ux-mailp .ux-mpx .ux-ic,html.ux-fm6 .ux-sheet:has(.ux-a2l) .ux-shx svg{width:16px!important;height:16px!important}
+/* f6 escritorio: el modal de aprobación tiene el alto de su contenido; «Added» copia ese alto desde ux.js */
+html.ux-desk.ux-fm6 .ux-sheet:has(.ux-mailp){height:auto!important;max-height:calc(100vh - 48px)!important}
+html.ux-desk.ux-fm6 .ux-sheet:has(.ux-a2l){height:auto!important;max-height:calc(100vh - 48px)!important}
+html.ux-desk.ux-fm6 .ux-sheet:has(.ux-mailp) .ux-mp-ft{margin-top:0!important;padding-top:24px!important}
+/* X de cierre: siempre un círculo perfecto (nunca se estira ni se encoge) y a 16 px de la esquina en la página de aprobación de escritorio, como en «Added to your cart» y en móvil */
+.ux-x,.ux-shx,.ux-mpx{flex:none!important;aspect-ratio:1/1;min-width:0!important;padding:0!important;border-radius:999px!important;line-height:0!important;place-items:center!important;overflow:hidden}
+html.ux-fm6 .ux-sheet:has(.ux-mailp)>.ux-shx{position:absolute!important;top:16px!important;right:16px!important;width:34px!important;height:34px!important;min-height:34px!important;max-height:34px!important;margin:0!important}
+html.ux-fm6 .ux-sheet:has(.ux-mailp)>.ux-shx svg{width:16px!important;height:16px!important}
+/* Vlad feedback · escritorio: el subtítulo de la lista de extras en una sola línea */
+html.ux-fv1.ux-desk .ux-top p{max-width:none!important;white-space:nowrap}
+
+/* Vlad feedback · cabecera del destacado de la lista: «Make your stay up to X h longer» (V1 definitiva) */
+.ux-lh{justify-content:flex-start!important}
+.ux-lh b{font-size:18px!important;line-height:1.25;font-weight:700;color:#161643}
+.ux-lh small{margin-top:2px}
+.ux-lh1 u{text-decoration:none;color:#2ac273}
+.ux-lh2{gap:12px!important}.ux-lh2 strong{flex:none;font-size:30px;line-height:1;font-weight:800;letter-spacing:-.02em;color:#2ac273}
+.ux-lh2 b{font-size:15.5px!important}
+.ux-lh3 b{display:block}.ux-lh3 em{display:inline-block;padding:2px 9px;margin:0 2px;border-radius:10px;background:#2ac273;color:#fff;font-style:normal;font-weight:700;line-height:1.3}
+.ux-lh4 i{display:block;margin-bottom:3px;font-style:normal;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#2ac273}
+.ux-lh b{text-wrap:balance}
+html:not(.ux-desk) .ux-lh3 b{font-size:16.5px!important;white-space:nowrap}
