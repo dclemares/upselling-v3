@@ -72,6 +72,10 @@ body{grid-template-columns:280px minmax(0,1fr) var(--sw,330px)}
 #chg .ch .bn button.on{background:var(--ink);color:#fff}
 #chg .ch.no{background:none;padding:6px 10px}#chg .ch.no b i{background:#c9cee4}
 #chg .ch.no small{margin-bottom:0}
+/* una sola versión (la de Vlad feedback) sin mostrarla: fuera el selector de versión y la columna «What changed» */
+#design,aside#chg{display:none!important}
+body{grid-template-columns:minmax(0,1fr) var(--sw,330px)!important}
+@media (max-width:1100px){body{grid-template-columns:minmax(0,1fr)!important}}
 </style></head><body>
 <header><h1>Upselling <span>v3</span> <small>Vlad’s use cases · our guestapp</small></h1><span class="cur" id="cur" aria-live="polite"></span>
 <div class="seg" id="view" role="group" aria-label="View"></div>
@@ -110,7 +114,7 @@ var LINK = [['home', '', 'Home · Offers for your stay'], ['cart', '', 'Payments
 var VIEWS = [['split', 'Mobile + desktop'], ['m', 'Mobile'], ['d', 'Desktop']];
 var DSN = [['v644', 'V6.4.4'], ['v644.v2.hc32k2.p3.t2.b3b.w3', 'Final · mobile + desktop'], ['v644.v2.hc32k2.p3.t2.b3b.w3.f6', 'Vlad feedback']];
 var flat = []; G.forEach(function(g){ g[2].forEach(function(s){ flat.push(s); }); });
-var h = new URLSearchParams(location.hash.slice(1)), i = Math.max(0, Math.min(flat.length - 1, +(h.get('i') || 0))), view = ['split', 'm', 'd'].indexOf(h.get('v')) > -1 ? h.get('v') : 'split', link = null, design = /^v644(\.v2(\.h([123]|c32k[123]|c32a[123]|c32[abc]|c3[123]|[bc][123]))?(\.p[123])?(\.t(2[a-f]|[123]))?(\.i[123])?(\.b(3[abc]|[123]))?(\.w[123])?(\.x[1-8])?(\.g[123])?(\.s[1-7])?(\.r[123])?(\.f[1-6])?)?$/.test(h.get('d') || '') ? h.get('d') : 'v644'; design = design.replace(/\.f[1-5]$/, '.f6');
+var h = new URLSearchParams(location.hash.slice(1)), i = Math.max(0, Math.min(flat.length - 1, +(h.get('i') || 0))), view = ['split', 'm', 'd'].indexOf(h.get('v')) > -1 ? h.get('v') : 'split', link = null, design = /^v644(\.v2(\.h([123]|c32k[123]|c32a[123]|c32[abc]|c3[123]|[bc][123]))?(\.p[123])?(\.t(2[a-f]|[123]))?(\.i[123])?(\.b(3[abc]|[123]))?(\.w[123])?(\.x[1-8])?(\.g[123])?(\.s[1-7])?(\.r[123])?(\.f[1-6])?)?$/.test(h.get('d') || '') ? h.get('d') : 'v644'; design = 'v644.v2.hc32k2.p3.t2.b3b.w3.f6';   /* versión única: no se muestra selector de versión */
 var fr = document.getElementById('fr'), list = document.getElementById('list'), set = document.getElementById('set');
 function cur(){ return link || flat[i]; }
 var extra = '';   /* parámetros que añade «What changed» (go=…) */
@@ -189,7 +193,7 @@ function paintSet(){ var d = val(deal), sl = d.type === 'early' || d.type === 'l
   var bOn = !!getCfg()._bought;
   hs += '<div class="tog prev"><span><b>Already purchased</b><small>Preview only (not a dashboard field): Early check-in, Welcome groceries and Bring your pet show as already bought, and Private parking as waiting for the host’s approval.</small></span><button type="button" class="sw" role="switch" aria-checked="' + bOn + '" aria-label="Already purchased" id="s-bought"><i></i></button></div>';
   hs += '<div class="tog prev cart"><span><b>In the cart</b><small>Preview only: Early check-in, Welcome groceries and Bring your pet are in the cart, waiting to be paid.</small></span><button type="button" class="sw" role="switch" aria-checked="' + !!getCfg()._cart + '" aria-label="In the cart" id="s-cart"><i></i></button></div>';
-  if (/\.f6$/.test(design)) hs += '<div class="tog prev"><span><b>Guest email unknown</b><small>Vlad feedback: some bookings come without the guest’s email. Deals that need approval ask for it on the «This one needs approval» page after Request, before «Added to your cart».</small></span><button type="button" class="sw" role="switch" aria-checked="' + !!getCfg()._nomail + '" aria-label="Guest email unknown" id="s-nomail"><i></i></button></div>';
+  if (/\.f6$/.test(design)) hs += '<div class="tog prev"><span><b>Guest email unknown</b><small>Some bookings come without the guest’s email. Deals that need approval ask for it on the «This one needs approval» page after Request, before «Added to your cart».</small></span><button type="button" class="sw" role="switch" aria-checked="' + !!getCfg()._nomail + '" aria-label="Guest email unknown" id="s-nomail"><i></i></button></div>';
   set.innerHTML = hs;
   set.querySelector('#s-scr').onchange = function(){ var v = this.value; if (v.charAt(0) === 'l') link = LINK[+v.slice(1)]; else { link = null; i = +v.slice(1); } load(); paintSet(); };
   set.querySelector('#s-deal').onchange = function(){ deal = this.value; paintSet(); var at = -1; flat.forEach(function(s, n){ if (at < 0 && (s[1] || '').indexOf('o=' + deal) > -1) at = n; }); if (at > -1) { link = null; i = at; load(); } };
@@ -211,5 +215,5 @@ load();
 /* el panel de Deal settings empieza siempre debajo de la cabecera (que ocupa varias líneas con tantas versiones) */
 (function(){ var hd = document.querySelector('header'); var f = function(){ document.documentElement.style.setProperty('--hh', hd.offsetHeight + 'px'); }; f(); window.addEventListener('resize', f); setTimeout(f, 300); })();
 </script>
-<script src="assets/i18n-en.js?v=1794486648"></script>
+<script src="assets/i18n-en.js?v=1794486856"></script>
 </body></html>
